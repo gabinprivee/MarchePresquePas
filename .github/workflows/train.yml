@@ -1,4 +1,4 @@
-name: Entraînement de l'IA
+name: Entrainement de l'IA
 
 on:
   schedule:
@@ -13,31 +13,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-<<<<<<< HEAD
-
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-
-      - name: Installer les dépendances
+      - name: Installer les dependances
         run: npm install
-
-      - name: Faire tourner l'évolution
+      - name: Faire tourner l evolution
         run: node train.js
-
-=======
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Installer les dépendances
-        run: npm install
-      - name: Faire tourner l'évolution
-        run: node train.js
->>>>>>> 949b17b (premier envoie)
       - name: Sauvegarder la progression
         run: |
           git config user.name "evo-bot"
           git config user.email "evo-bot@users.noreply.github.com"
           git add state.json
-          git diff --staged --quiet || git commit -m "Évolution automatique"
+          git diff --staged --quiet || git commit -m "Evolution automatique"
           git push
