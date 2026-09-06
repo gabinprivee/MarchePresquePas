@@ -141,6 +141,18 @@ function forward(genome, inputs){
   return out;
 }
 function zAngle(q){ return Math.atan2(2*(q.w*q.z+q.x*q.y), 1-2*(q.y*q.y+q.z*q.z)); }
+function relAngle(bodyA,bodyB){
+  var d = zAngle(bodyB.quaternion) - zAngle(bodyA.quaternion);
+  while(d>Math.PI) d-=2*Math.PI;
+  while(d<-Math.PI) d+=2*Math.PI;
+  return d;
+}
+function limitedMotor(hinge, bodyA, bodyB, min, max, speed){
+  var ang = relAngle(bodyA, bodyB);
+  if(ang<=min && speed<0) speed=0;
+  if(ang>=max && speed>0) speed=0;
+  hinge.setMotorSpeed(speed);
+}
 
 var world = new CANNON.World();
 world.gravity.set(0,-9.82,0);
@@ -266,12 +278,19 @@ function stepCreature(c){
     distLeft
   ];
   var out = forward(c.genome, inputs).map(function(v){ return isFinite(v) ? v : 0; });
-  c.waist.setMotorSpeed(out[0]*4); c.spine.setMotorSpeed(out[1]*4); c.neck.setMotorSpeed(out[2]*3);
-  c.arms[0].shoulder.setMotorSpeed(out[3]*4); c.arms[1].shoulder.setMotorSpeed(out[4]*4);
-  c.arms[0].elbow.setMotorSpeed(out[5]*4); c.arms[1].elbow.setMotorSpeed(out[6]*4);
-  c.legs[0].hip.setMotorSpeed(out[7]*5); c.legs[1].hip.setMotorSpeed(out[8]*5);
-  c.legs[0].knee.setMotorSpeed(out[9]*5); c.legs[1].knee.setMotorSpeed(out[10]*5);
-  c.legs[0].ankle.setMotorSpeed(out[11]*4); c.legs[1].ankle.setMotorSpeed(out[12]*4);
+  limitedMotor(c.waist, c.pelvis, c.abdomen, -0.5, 0.5, out[0]*4);
+  limitedMotor(c.spine, c.abdomen, c.chest, -0.4, 0.4, out[1]*4);
+  limitedMotor(c.neck, c.chest, c.head, -0.6, 0.6, out[2]*3);
+  limitedMotor(c.arms[0].shoulder, c.chest, c.arms[0].upperArm, -2.0, 2.0, out[3]*4);
+  limitedMotor(c.arms[1].shoulder, c.chest, c.arms[1].upperArm, -2.0, 2.0, out[4]*4);
+  limitedMotor(c.arms[0].elbow, c.arms[0].upperArm, c.arms[0].forearm, -2.2, 0.2, out[5]*4);
+  limitedMotor(c.arms[1].elbow, c.arms[1].upperArm, c.arms[1].forearm, -2.2, 0.2, out[6]*4);
+  limitedMotor(c.legs[0].hip, c.pelvis, c.legs[0].thigh, -1.3, 1.3, out[7]*5);
+  limitedMotor(c.legs[1].hip, c.pelvis, c.legs[1].thigh, -1.3, 1.3, out[8]*5);
+  limitedMotor(c.legs[0].knee, c.legs[0].thigh, c.legs[0].shin, -2.3, 0.3, out[9]*5);
+  limitedMotor(c.legs[1].knee, c.legs[1].thigh, c.legs[1].shin, -2.3, 0.3, out[10]*5);
+  limitedMotor(c.legs[0].ankle, c.legs[0].shin, c.legs[0].foot, -0.6, 0.6, out[11]*4);
+  limitedMotor(c.legs[1].ankle, c.legs[1].shin, c.legs[1].foot, -0.6, 0.6, out[12]*4);
   c.legs.forEach(function(l){ l.contact = l.foot.position.y < 0.1; });
   if(c.chest.position.x > c.best) c.best = c.chest.position.x;
 
