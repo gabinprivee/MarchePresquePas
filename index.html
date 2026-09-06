@@ -262,7 +262,7 @@ function stepCreature(c){
   if(c.chest.position.x > c.best) c.best = c.chest.position.x;
 
   var fullyDown = c.chest.position.y < 0.32 && c.head.position.y < 0.35;
-  if(fullyDown){ c.collapseTimer++; if(c.collapseTimer > 60) resetCreature(c); } else { c.collapseTimer = 0; }
+  if(fullyDown){ c.collapseTimer++; if(c.collapseTimer > 150*60) resetCreature(c); } else { c.collapseTimer = 0; }
 }
 function syncCreature(c, isLead){
   function applyMat(mesh){ mesh.material = isLead ? mesh.userData.origMat : dimMat; }
