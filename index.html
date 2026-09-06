@@ -323,10 +323,20 @@ window.addEventListener('pointermove', function(e){
 });
 stage.addEventListener('wheel', function(e){ camDist = Math.max(2.5, Math.min(16, camDist + e.deltaY*0.01)); e.preventDefault(); }, {passive:false});
 
+function clampFloor(body, halfH){
+  if(body.position.y < halfH){ body.position.y = halfH; if(body.velocity.y<0) body.velocity.y = 0; }
+}
+function clampCreatureToFloor(c){
+  clampFloor(c.pelvis, PELVIS_H.hy); clampFloor(c.abdomen, ABDOMEN_H.hy); clampFloor(c.chest, CHEST_H.hy); clampFloor(c.head, HEAD_H.hy);
+  c.arms.forEach(function(a){ clampFloor(a.upperArm, UPARM_H.hy); clampFloor(a.forearm, FOREARM_H.hy); });
+  c.legs.forEach(function(l){ clampFloor(l.thigh, THIGH_H.hy); clampFloor(l.shin, SHIN_H.hy); clampFloor(l.foot, FOOT_H.hy); });
+}
+
 function animate(){
   requestAnimationFrame(animate);
   creatures.forEach(function(c){ stepCreature(c); });
   world.step(1/60);
+  creatures.forEach(clampCreatureToFloor);
   var lead = leaderCreature();
   creatures.forEach(function(c){ syncCreature(c, c===lead); });
   if(lead){
