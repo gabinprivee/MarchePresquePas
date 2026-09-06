@@ -187,9 +187,10 @@ var rule = { forbiddenPart: 'torso', goalDistance: 10 };
 var state = loadJSON(STATE_PATH, { generation: 0, bestPct: 0, currentGenomes: null, history: [], milestones: {}, lastRule: null, updatedAt: null });
 if (!state.lastRule) state.lastRule = { forbiddenPart: rule.forbiddenPart, goalDistance: rule.goalDistance };
 
-var genomes = state.currentGenomes && state.currentGenomes.length === POP
-  ? state.currentGenomes
-  : Array.from({ length: POP }, randGenome);
+var genomesValid = state.currentGenomes && state.currentGenomes.length === POP
+  && state.currentGenomes.every(function (g) { return Array.isArray(g) && g.length === GLEN; });
+var genomes = genomesValid ? state.currentGenomes : Array.from({ length: POP }, randGenome);
+if (!genomesValid) { state.generation = 0; state.bestPct = 0; state.history = []; state.milestones = {}; }
 
 function fitPct(best) { return Math.max(0, Math.min(100, (best / rule.goalDistance) * 100)); }
 function recordMilestones(gen, metrics, genome) {
