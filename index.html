@@ -251,7 +251,7 @@ function stepCreature(c){
     zAngle(c.legs[1].thigh.quaternion), zAngle(c.legs[1].shin.quaternion),
     distLeft
   ];
-  var out = forward(c.genome, inputs);
+  var out = forward(c.genome, inputs).map(function(v){ return isFinite(v) ? v : 0; });
   c.waist.setMotorSpeed(out[0]*4); c.spine.setMotorSpeed(out[1]*4); c.neck.setMotorSpeed(out[2]*3);
   c.arms[0].shoulder.setMotorSpeed(out[3]*4); c.arms[1].shoulder.setMotorSpeed(out[4]*4);
   c.arms[0].elbow.setMotorSpeed(out[5]*4); c.arms[1].elbow.setMotorSpeed(out[6]*4);
@@ -263,6 +263,7 @@ function stepCreature(c){
 
   var fullyDown = c.chest.position.y < 0.32 && c.head.position.y < 0.35;
   if(fullyDown){ c.collapseTimer++; if(c.collapseTimer > 150*60) resetCreature(c); } else { c.collapseTimer = 0; }
+  if(!isFinite(c.chest.position.y) || c.chest.position.y < -3) resetCreature(c);
 }
 function syncCreature(c, isLead){
   function applyMat(mesh){ mesh.material = isLead ? mesh.userData.origMat : dimMat; }
