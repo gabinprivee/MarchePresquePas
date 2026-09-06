@@ -1,21 +1,12 @@
 {
-<<<<<<< HEAD
-  "name": "evolution-marche-ia",
+  "name": "premiers-pas-ia",
   "version": "1.0.0",
   "private": true,
-  "description": "Entraînement automatique d'une IA qui apprend à marcher, par sélection génétique.",
+  "description": "Une IA au corps articule complet apprend a marcher, par selection genetique.",
   "scripts": {
     "train": "node train.js"
   },
   "dependencies": {
     "cannon": "^0.6.2"
   }
-=======
-  "name": "premiers-pas-ia",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Une IA au corps articulé complet apprend à marcher, par sélection génétique.",
-  "scripts": { "train": "node train.js" },
-  "dependencies": { "cannon": "^0.6.2" }
->>>>>>> 949b17b (premier envoie)
 }
