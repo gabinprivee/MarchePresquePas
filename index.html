@@ -365,9 +365,12 @@ function renderMilestones(){
     list.appendChild(div);
   });
 }
+var GLEN = IN*HID+HID + HID*OUT+OUT;
 function goLive(){
   mode='live';
-  if(state.currentGenomes && state.currentGenomes.length) buildPopulation(state.currentGenomes);
+  var g = state.currentGenomes;
+  var valid = g && g.length && g.every(function(x){ return Array.isArray(x) && x.length===GLEN; });
+  if(valid) buildPopulation(g);
 }
 document.getElementById('liveBtn').addEventListener('click', goLive);
 document.getElementById('playGenBtn').addEventListener('click', function(){
