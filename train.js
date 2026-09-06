@@ -3,36 +3,15 @@ const path = require('path');
 const CANNON = require('cannon');
 
 const STATE_PATH = path.join(__dirname, 'state.json');
-const RULE_PATH = path.join(__dirname, 'rule.json');
 
 const POP = 4;
-<<<<<<< HEAD
-const IN = 12, HID = 10;
-const OUT = 13;
-=======
 const IN = 12, HID = 10, OUT = 13;
->>>>>>> 949b17b (premier envoie)
 const GLEN = IN * HID + HID + HID * OUT + OUT;
 const HZ = 60;
 const GEN_SECONDS = 9;
 const GEN_STEPS = HZ * GEN_SECONDS;
-<<<<<<< HEAD
-const GENERATIONS_PER_TASK_PER_RUN = 2;
-const HISTORY_LIMIT = 4000;
-const RIG_VERSION = 2;
-const CHEST_REST_Y = 1.28;
-const TASKS = ['marche', 'course', 'rampe', 'saut', 'accroupi'];
-const TASK_DEFAULTS = {
-  marche: { forbiddenPart: 'torso', goalDistance: 10 },
-  course: { forbiddenPart: 'torso', goalDistance: 10 },
-  rampe: { forbiddenPart: 'head', goalDistance: 8 },
-  saut: { forbiddenPart: 'torso', goalDistance: 30 },
-  accroupi: { forbiddenPart: 'torso', goalDistance: 40 }
-};
-=======
 const GENERATIONS_PER_RUN = 6;
 const HISTORY_LIMIT = 20000;
->>>>>>> 949b17b (premier envoie)
 
 function randGenome() {
   var g = [];
@@ -100,11 +79,7 @@ var CHEST_H = { hx: 0.16, hy: 0.13, hz: 0.16 };
 var HEAD_H = { hx: 0.14, hy: 0.14, hz: 0.14 };
 var UPARM_H = { hx: 0.055, hy: 0.15, hz: 0.055 };
 var FOREARM_H = { hx: 0.05, hy: 0.13, hz: 0.05 };
-<<<<<<< HEAD
-var Y = { foot: 0.045, shin: 0.28, thigh: 0.66, pelvis: 0.93, abdomen: 1.08, chest: CHEST_REST_Y, head: 1.55, upperArm: 1.22, forearm: 0.94, shoulder: 1.37 };
-=======
 var Y = { foot: 0.045, shin: 0.28, thigh: 0.66, pelvis: 0.93, abdomen: 1.08, chest: 1.28, head: 1.55, upperArm: 1.22, forearm: 0.94, shoulder: 1.37 };
->>>>>>> 949b17b (premier envoie)
 
 function createCreature(world, genome, idx, startX, z) {
   var groupBit = 1 << (idx + 2);
@@ -148,54 +123,19 @@ function createCreature(world, genome, idx, startX, z) {
   return {
     pelvis: pelvis, abdomen: abdomen, chest: chest, head: head, arms: arms, legs: legs,
     waist: waist, spine: spine, neck: neck, genome: genome,
-<<<<<<< HEAD
-    best: 0, alive: true, standTicks: 0, airTicks: 0, crouchTicks: 0, maxChestY: Y.chest
-  };
-}
-
-function scoreCreature(c, rule) {
-  var metrics = { standFrac: c.standTicks / GEN_STEPS, airFrac: c.airTicks / GEN_STEPS };
-  var pct;
-  if (rule.__task === 'saut') {
-    var targetH = (rule.goalDistance || 30) / 100;
-    var extra = Math.max(0, c.maxChestY - CHEST_REST_Y);
-    pct = Math.max(0, Math.min(100, (extra / targetH) * 100));
-  } else if (rule.__task === 'accroupi') {
-    pct = Math.max(0, Math.min(100, (c.crouchTicks / GEN_STEPS) * 100));
-  } else {
-    pct = Math.max(0, Math.min(100, (c.best / rule.goalDistance) * 100));
-    if (rule.__task === 'course') {
-      pct = Math.min(100, pct * (1 + 0.2 * Math.min(1, metrics.airFrac * 8)));
-    } else if (rule.__task === 'rampe') {
-      if (metrics.standFrac > 0.3) pct *= 0.4;
-    }
-  }
-  metrics.pct = pct;
-  return metrics;
-}
-
-function simulateGeneration(genomes, rule) {
-  var world = buildWorld();
-  var crouchTarget = (rule.goalDistance || 40) / 100;
-=======
     best: 0, alive: true, standTicks: 0
   };
 }
 
 function simulateGeneration(genomes, rule) {
   var world = buildWorld();
->>>>>>> 949b17b (premier envoie)
   var creatures = genomes.map(function (g, i) {
     return createCreature(world, g, i, 0, (i - (genomes.length - 1) / 2) * 0.9);
   });
   for (var step = 0; step < GEN_STEPS; step++) {
     creatures.forEach(function (c) {
       if (!c.alive) return;
-<<<<<<< HEAD
-      var distLeft = Math.max(0, Math.min(1, ((rule.goalDistance || 10) - c.chest.position.x) / (rule.goalDistance || 10)));
-=======
       var distLeft = Math.max(0, Math.min(1, (rule.goalDistance - c.chest.position.x) / rule.goalDistance));
->>>>>>> 949b17b (premier envoie)
       var inputs = [
         zAngle(c.chest.quaternion), c.chest.angularVelocity.z / 4,
         zAngle(c.pelvis.quaternion), zAngle(c.abdomen.quaternion), zAngle(c.head.quaternion),
@@ -222,56 +162,12 @@ function simulateGeneration(genomes, rule) {
       c.legs.forEach(function (l) { l.contact = l.foot.position.y < 0.1; });
       var forbidden = rule.forbiddenPart === 'head' ? c.head : c.chest;
       if (forbidden.position.y < 0.3) c.alive = false;
-<<<<<<< HEAD
-
       if (c.chest.position.y > 1.0) c.standTicks++;
-      if (!c.legs[0].contact && !c.legs[1].contact) c.airTicks++;
-      if (Math.abs(c.chest.position.y - crouchTarget) < 0.08 && c.chest.position.y > 0.3) c.crouchTicks++;
-      if (c.chest.position.y > c.maxChestY) c.maxChestY = c.chest.position.y;
-=======
-      if (c.chest.position.y > 1.0) c.standTicks++;
->>>>>>> 949b17b (premier envoie)
       if (c.chest.position.x > c.best) c.best = c.chest.position.x;
     });
     world.step(1 / HZ);
   }
   return creatures.map(function (c) {
-<<<<<<< HEAD
-    var metrics = scoreCreature(c, rule);
-    return { genome: c.genome, pct: metrics.pct, standFrac: metrics.standFrac, airFrac: metrics.airFrac };
-  });
-}
-
-var TASK_MILESTONES = {
-  marche: [
-    { key: 'mouv', label: 'Premier mouvement', test: function (m) { return m.pct >= 5; } },
-    { key: 'debout', label: 'Il tient debout', test: function (m) { return m.standFrac >= 0.3; } },
-    { key: 'pas', label: 'Premiers pas', test: function (m) { return m.pct >= 30; } },
-    { key: 'arrivee', label: 'Arrivée au point B', test: function (m) { return m.pct >= 100; } }
-  ],
-  course: [
-    { key: 'mouv', label: 'Premier mouvement', test: function (m) { return m.pct >= 5; } },
-    { key: 'vol', label: 'Première foulée aérienne', test: function (m) { return m.airFrac >= 0.05; } },
-    { key: 'pas', label: 'Ça court', test: function (m) { return m.pct >= 30; } },
-    { key: 'arrivee', label: 'Arrivée au point B', test: function (m) { return m.pct >= 100; } }
-  ],
-  rampe: [
-    { key: 'mouv', label: 'Premier mouvement', test: function (m) { return m.pct >= 5; } },
-    { key: 'pas', label: 'Reptation efficace', test: function (m) { return m.pct >= 30; } },
-    { key: 'arrivee', label: 'Arrivée au point B', test: function (m) { return m.pct >= 100; } }
-  ],
-  saut: [
-    { key: 'mouv', label: 'Premier décollage', test: function (m) { return m.pct >= 5; } },
-    { key: 'demi', label: 'Bonne impulsion', test: function (m) { return m.pct >= 40; } },
-    { key: 'obj', label: 'Hauteur visée atteinte', test: function (m) { return m.pct >= 100; } }
-  ],
-  accroupi: [
-    { key: 'mouv', label: 'Premier fléchissement', test: function (m) { return m.pct >= 5; } },
-    { key: 'tenue', label: 'Tient la position', test: function (m) { return m.pct >= 50; } },
-    { key: 'obj', label: 'Position stable et complète', test: function (m) { return m.pct >= 100; } }
-  ]
-};
-=======
     return { genome: c.genome, best: c.best, standFrac: c.standTicks / GEN_STEPS };
   });
 }
@@ -282,86 +178,14 @@ var MILESTONES = [
   { key: 'pas', label: 'Premiers pas', test: function (m) { return m.pct >= 30; } },
   { key: 'arrivee', label: 'Arrivée au point B', test: function (m) { return m.pct >= 100; } }
 ];
->>>>>>> 949b17b (premier envoie)
 
 function loadJSON(p, fallback) {
   try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch (e) { return fallback; }
 }
 
-<<<<<<< HEAD
-var rules = loadJSON(RULE_PATH, {});
-TASKS.forEach(function (t) { if (!rules[t]) rules[t] = TASK_DEFAULTS[t]; });
-
-var state = loadJSON(STATE_PATH, { rigVersion: 0, tasks: {}, updatedAt: null });
-if (!state.tasks) state.tasks = {};
-var rigChanged = state.rigVersion !== RIG_VERSION;
-if (rigChanged) { state.tasks = {}; state.rigVersion = RIG_VERSION; }
-
-TASKS.forEach(function (task) {
-  var rule = Object.assign({ __task: task }, rules[task]);
-  var ts = state.tasks[task];
-  var freshTask = !ts;
-  if (!ts) {
-    ts = { generation: 0, bestPct: 0, currentGenomes: null, history: [], milestones: {}, lastRule: null };
-    state.tasks[task] = ts;
-  }
-  var ruleChanged = !ts.lastRule || ts.lastRule.forbiddenPart !== rule.forbiddenPart || ts.lastRule.goalDistance !== rule.goalDistance;
-  if (ruleChanged && !freshTask) {
-    ts.generation = 0; ts.bestPct = 0; ts.currentGenomes = null; ts.milestones = {}; ts.history = [];
-  }
-  ts.lastRule = { forbiddenPart: rule.forbiddenPart, goalDistance: rule.goalDistance };
-
-  var genomes = ts.currentGenomes && ts.currentGenomes.length === POP
-    ? ts.currentGenomes
-    : Array.from({ length: POP }, randGenome);
-
-  function recordMilestones(gen, metrics, genome) {
-    var defs = TASK_MILESTONES[task] || [];
-    defs.forEach(function (d) {
-      if (ts.milestones[d.key]) return;
-      if (d.test(metrics)) ts.milestones[d.key] = { generation: gen, label: d.label, pct: Math.round(metrics.pct), genome: genome };
-    });
-  }
-
-  for (var run = 0; run < GENERATIONS_PER_TASK_PER_RUN; run++) {
-    var results = simulateGeneration(genomes, rule);
-    results.sort(function (a, b) { return b.pct - a.pct; });
-
-    ts.generation++;
-    var top = results[0];
-    if (top.pct > ts.bestPct) ts.bestPct = top.pct;
-    recordMilestones(ts.generation, top, top.genome);
-
-    ts.history.push({
-      gen: ts.generation, pct: Math.round(top.pct * 10) / 10,
-      genome: top.genome, rule: { task: task, forbiddenPart: rule.forbiddenPart, goalDistance: rule.goalDistance }
-    });
-    if (ts.history.length > HISTORY_LIMIT) ts.history.shift();
-
-    var next = [top.genome, mutate(top.genome)];
-    var pool = results.slice(0, Math.max(2, Math.floor(POP / 2)));
-    while (next.length < POP) {
-      var a = pool[Math.floor(Math.random() * pool.length)].genome;
-      var b = pool[Math.floor(Math.random() * pool.length)].genome;
-      next.push(mutate(crossover(a, b)));
-    }
-    genomes = next;
-  }
-  ts.currentGenomes = genomes;
-});
-
-state.updatedAt = new Date().toISOString();
-fs.writeFileSync(STATE_PATH, JSON.stringify(state));
-console.log('Cycle terminé —', TASKS.map(function (t) { return t + ':' + state.tasks[t].generation; }).join(', '));
-=======
-var rule = loadJSON(RULE_PATH, { forbiddenPart: 'torso', goalDistance: 10 });
+var rule = { forbiddenPart: 'torso', goalDistance: 10 };
 var state = loadJSON(STATE_PATH, { generation: 0, bestPct: 0, currentGenomes: null, history: [], milestones: {}, lastRule: null, updatedAt: null });
-
-var ruleChanged = !state.lastRule || state.lastRule.forbiddenPart !== rule.forbiddenPart || state.lastRule.goalDistance !== rule.goalDistance;
-if (ruleChanged) {
-  state.generation = 0; state.bestPct = 0; state.currentGenomes = null; state.milestones = {}; state.history = [];
-  state.lastRule = { forbiddenPart: rule.forbiddenPart, goalDistance: rule.goalDistance };
-}
+if (!state.lastRule) state.lastRule = { forbiddenPart: rule.forbiddenPart, goalDistance: rule.goalDistance };
 
 var genomes = state.currentGenomes && state.currentGenomes.length === POP
   ? state.currentGenomes
@@ -405,4 +229,3 @@ state.currentGenomes = genomes;
 state.updatedAt = new Date().toISOString();
 fs.writeFileSync(STATE_PATH, JSON.stringify(state));
 console.log('Génération', state.generation, '—', Math.round(state.bestPct) + '%');
->>>>>>> 949b17b (premier envoie)

@@ -3,151 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-<title>Labo d'évolution — apprentissage moteur</title>
-=======
 <title>Labo d'évolution — premiers pas</title>
->>>>>>> 949b17b (premier envoie)
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cannon.js/0.6.2/cannon.min.js"></script>
 <style>
   :root{
-<<<<<<< HEAD
-    --bg:#0a0912; --bg2:#0f0d1a; --panel:#151220; --panel2:#191624; --line:#26223580; --line-soft:#26223540;
-    --purple:#9b8ef2; --purple2:#7268d4; --purple-dim:#4a4370; --purple-glow:#8b7fe84d;
-    --text:#eeecf6; --muted:#8b87a3; --muted2:#615c7a; --green:#6fd98a; --gold:#e0b95a; --red:#e0716b;
-    --radius:14px; --radius-sm:9px;
-    --font-display:'Space Grotesk', system-ui, sans-serif;
-    --font-mono:'JetBrains Mono', 'Courier New', monospace;
-  }
-  *{box-sizing:border-box;}
-  html{scrollbar-color:var(--purple-dim) transparent;}
-  body{
-    margin:0; color:var(--text); font-family:var(--font-mono); padding:28px 18px 60px;
-    background:
-      radial-gradient(700px 420px at 12% -8%, #241f3f 0%, transparent 60%),
-      radial-gradient(600px 380px at 100% 0%, #1c1830 0%, transparent 55%),
-      var(--bg);
-    min-height:100vh;
-  }
-  .wrap{max-width:760px; margin:0 auto;}
-
-  .eyebrow{font-family:var(--font-mono); font-size:11px; letter-spacing:2.5px; color:var(--purple); text-transform:uppercase; margin:0 0 8px; display:flex; align-items:center; gap:8px;}
-  .eyebrow::before{content:''; width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 8px 1px var(--green); display:inline-block;}
-  h1{font-family:var(--font-display); font-size:26px; font-weight:600; letter-spacing:-0.3px; margin:0 0 8px; line-height:1.2;}
-  .sub{color:var(--muted); font-size:13.5px; margin:0 0 22px; line-height:1.65; max-width:56ch;}
-
-  .row{display:flex; align-items:center; gap:12px; margin-bottom:12px; font-size:13px;}
-  .row label{flex:0 0 130px; color:var(--muted); font-size:12.5px;}
-
-  .selectwrap{position:relative; flex:1;}
-  .selectwrap::after{content:'▾'; position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:11px; pointer-events:none;}
-  select{appearance:none; -webkit-appearance:none; width:100%;}
-  select, input[type=text], input[type=password]{
-    background:var(--bg2); color:var(--text); border:1px solid var(--line); border-radius:var(--radius-sm);
-    padding:9px 12px; flex:1; font-family:var(--font-mono); font-size:13px; transition:border-color .15s ease;
-  }
-  select:focus, input:focus{outline:none; border-color:var(--purple);}
-  input[type=range]{
-    flex:1; -webkit-appearance:none; appearance:none; height:4px; border-radius:4px;
-    background:linear-gradient(90deg, var(--purple) 0%, var(--purple) var(--fill,50%), var(--line-soft) var(--fill,50%));
-  }
-  input[type=range]::-webkit-slider-thumb{
-    -webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:var(--purple);
-    box-shadow:0 0 0 3px #9b8ef233, 0 1px 3px rgba(0,0,0,.4); cursor:pointer; border:2px solid #0a0912;
-  }
-  input[type=range]::-moz-range-thumb{
-    width:16px; height:16px; border-radius:50%; background:var(--purple); border:2px solid #0a0912; cursor:pointer;
-  }
-
-  #taskSel{font-weight:500; letter-spacing:0.2px;}
-
-  .stats{display:flex; gap:10px; margin:18px 0; flex-wrap:wrap;}
-  .stat{
-    background:linear-gradient(160deg, var(--panel2), var(--panel)); border:1px solid var(--line); border-radius:var(--radius-sm);
-    padding:13px 15px; flex:1; min-width:104px; position:relative; overflow:hidden;
-  }
-  .stat::before{content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, var(--purple), transparent);}
-  .stat .label{font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:1px;}
-  .stat .val{font-family:var(--font-display); font-size:21px; font-weight:600; color:var(--text); margin-top:4px;}
-
-  .stage{
-    position:relative; width:100%; height:380px; background:#cac2b3; border:1px solid var(--line);
-    border-radius:var(--radius); overflow:hidden; cursor:grab; touch-action:none;
-    box-shadow:inset 0 0 60px rgba(0,0,0,.12), 0 8px 30px -12px rgba(0,0,0,.6);
-  }
-  .stage:active{cursor:grabbing;}
-  .stage::after{
-    content:''; position:absolute; inset:0; pointer-events:none; border-radius:var(--radius);
-    box-shadow:inset 0 0 60px 10px rgba(40,34,20,.18);
-  }
-  .hint{
-    position:absolute; bottom:10px; left:10px; font-size:10.5px; color:var(--muted);
-    background:rgba(10,9,18,.7); backdrop-filter:blur(4px); padding:5px 10px; border-radius:20px;
-    pointer-events:none; border:1px solid var(--line-soft); z-index:2;
-  }
-
-  .panel{
-    background:linear-gradient(160deg, var(--panel2), var(--panel)); border:1px solid var(--line);
-    border-radius:var(--radius); padding:18px; margin-top:16px;
-  }
-  .panel h2{
-    font-family:var(--font-display); font-size:13.5px; font-weight:600; color:var(--text);
-    margin:0 0 14px; padding-left:11px; border-left:2px solid var(--purple); letter-spacing:0.2px;
-  }
-
-  .milestones{display:flex; flex-direction:column; gap:7px;}
-  .ms{
-    display:flex; align-items:center; justify-content:space-between; padding:10px 13px;
-    border:1px solid var(--line); border-radius:var(--radius-sm); font-size:13px; background:var(--bg2);
-    border-left:2px solid var(--purple); transition:transform .12s ease;
-  }
-  .ms:not(.locked):hover{transform:translateX(2px); border-left-color:var(--gold);}
-  .ms.locked{opacity:.4; border-left-color:var(--line);}
-  .ms::before{content:'✓ '; color:var(--green); font-weight:600;}
-  .ms.locked::before{content:'· '; color:var(--muted2);}
-  .ms .meta{color:var(--muted); font-size:11px; font-variant-numeric:tabular-nums;}
-
-  button{
-    background:var(--panel2); border:1px solid var(--line); color:var(--text); padding:10px 14px;
-    border-radius:var(--radius-sm); font-family:var(--font-mono); font-size:12.5px; cursor:pointer;
-    transition:border-color .15s ease, transform .1s ease, background .15s ease;
-  }
-  button:hover{border-color:var(--purple); background:var(--panel);}
-  button:active{transform:scale(0.98);}
-  button.primary{
-    background:linear-gradient(160deg, var(--purple2), var(--purple-dim)); border-color:var(--purple);
-    font-weight:500; box-shadow:0 4px 16px -6px var(--purple-glow);
-  }
-  button.primary:hover{filter:brightness(1.1);}
-
-  .controls{display:flex; gap:9px; margin-top:12px; flex-wrap:wrap;}
-  .controls button{flex:1; min-width:120px;}
-
-  .note{color:var(--muted); font-size:11.5px; margin-top:16px; line-height:1.7; padding:12px 14px; background:var(--bg2); border-radius:var(--radius-sm); border:1px solid var(--line-soft);}
-  .note code{color:var(--purple); background:rgba(155,142,242,.1); padding:1px 5px; border-radius:4px; font-size:11px;}
-
-  details summary{list-style:none; cursor:pointer; color:var(--muted); font-size:12px; padding:6px 0;}
-  details summary::-webkit-details-marker{display:none;}
-  details summary::before{content:'▸ '; color:var(--purple);}
-  details[open] summary::before{content:'▾ '; }
-
-  #ruleStatus:not(:empty){padding:8px 0 0; font-size:12px;}
-
-  .padkeys{display:none;}
-  @media (pointer:coarse){
-    .padkeys{display:grid; grid-template-columns:44px 44px 44px; grid-template-rows:44px 44px; gap:4px; position:absolute; bottom:10px; right:10px; z-index:2;}
-    .padkeys button{padding:0; min-width:0; font-size:16px; background:rgba(10,9,18,.75); backdrop-filter:blur(4px);}
-  }
-  @media (max-width:480px){
-    body{padding:20px 14px 50px;}
-    h1{font-size:21px;}
-    .row{flex-wrap:wrap;}
-    .row label{flex:1 1 100%;}
-  }
-=======
     --bg:#0a0912; --panel:#151220; --panel2:#191624; --line:#26223580; --line-soft:#26223540;
     --purple:#9b8ef2; --purple2:#7268d4; --purple-dim:#4a4370; --purple-glow:#8b7fe84d;
     --text:#eeecf6; --muted:#8b87a3; --muted2:#615c7a; --green:#6fd98a; --gold:#e0b95a;
@@ -197,147 +59,42 @@
   details summary::-webkit-details-marker{display:none;}
   details summary::before{content:'▸ ';}
   details[open] summary::before{content:'▾ ';}
->>>>>>> 949b17b (premier envoie)
 </style>
 </head>
 <body>
 <div class="wrap">
   <p class="eyebrow">Entraînement actif · GitHub Actions</p>
-<<<<<<< HEAD
-  <h1>Labo d'évolution — apprentissage moteur</h1>
-  <p class="sub">Un seul corps articulé. Les 5 comportements (marcher, courir, ramper, sauter, s'accroupir) s'entraînent tout seuls en parallèle, à chaque cycle automatique — choisis juste lequel regarder.</p>
-
-  <div class="row">
-    <label>Tâche affichée</label>
-    <div class="selectwrap">
-    <select id="taskSel">
-      <option value="marche">Marcher</option>
-      <option value="course">Courir</option>
-      <option value="rampe">Ramper</option>
-      <option value="saut">Sauter</option>
-      <option value="accroupi">S'accroupir</option>
-    </select>
-    </div>
-  </div>
-
-  <div class="stats">
-    <div class="stat"><div class="label">Génération</div><div class="val" id="genOut">—</div></div>
-    <div class="stat"><div class="label">Meilleur score</div><div class="val" id="bestOut">—</div></div>
-=======
   <h1>Labo d'évolution — premiers pas</h1>
   <p class="sub">Un corps articulé complet apprend, génération après génération, à aller du point A au point B sans que la partie du corps choisie ne touche le sol.</p>
 
   <div class="stats">
     <div class="stat"><div class="label">Génération</div><div class="val" id="genOut">—</div></div>
     <div class="stat"><div class="label">Meilleure distance</div><div class="val" id="bestOut">—</div></div>
->>>>>>> 949b17b (premier envoie)
     <div class="stat"><div class="label">Mis à jour</div><div class="val" id="updOut" style="font-size:13px;">—</div></div>
   </div>
 
   <div class="stage" id="stage">
-<<<<<<< HEAD
-    <div class="hint">glisser = tourner · WASD/flèches = se déplacer · molette = zoom</div>
-    <div class="padkeys">
-      <div></div><button data-k="up">▲</button><div></div>
-      <button data-k="left">◀</button><button data-k="down">▼</button><button data-k="right">▶</button>
-    </div>
-  </div>
-
-  <div class="controls">
-    <button class="primary" id="gridBtn">Vue grille</button>
-    <button id="spotlightBtn">Vue projecteur</button>
-  </div>
-
-  <div class="panel">
-    <h2>Objectif de la tâche sélectionnée</h2>
-    <div class="row">
-      <label>Partie interdite au sol</label>
-      <div class="selectwrap">
-      <select id="ruleP">
-        <option value="torso">Torse</option>
-        <option value="head">Tête</option>
-      </select>
-      </div>
-    </div>
-    <div class="row">
-      <label id="ruleDLabel">Distance à parcourir</label>
-      <input type="range" id="ruleD" min="4" max="25" step="1" value="10">
-      <span id="ruleDOut" style="width:50px; text-align:right; color:var(--muted);">10 m</span>
-    </div>
-    <button class="primary" id="saveRuleBtn" style="width:100%;">Enregistrer sur GitHub</button>
-    <div id="ruleStatus" style="font-size:12px; color:var(--muted); margin-top:8px;"></div>
-
-    <details style="margin-top:12px;">
-      <summary style="cursor:pointer; color:var(--muted); font-size:12px;">Connexion GitHub (à faire une seule fois, dans ce navigateur)</summary>
-      <div class="row" style="margin-top:10px;">
-        <label>Dépôt</label>
-        <input type="text" id="ghRepo" placeholder="tonpseudo/nom-du-depot">
-      </div>
-      <div class="row">
-        <label>Token</label>
-        <input type="password" id="ghToken" placeholder="github_pat_...">
-      </div>
-      <button id="saveConnBtn" style="width:100%;">Mémoriser</button>
-    </details>
-  </div>
-
-  <div class="panel">
-    <h2>Grands moments de cette tâche</h2>
-=======
     <div class="hint">glisser = tourner · molette = zoom</div>
   </div>
 
   <div class="panel">
     <h2>Grands moments</h2>
->>>>>>> 949b17b (premier envoie)
     <div class="milestones" id="msList"></div>
   </div>
 
   <div class="panel">
-<<<<<<< HEAD
-    <h2>Parcourir l'historique de cette tâche</h2>
-=======
     <h2>Parcourir l'historique</h2>
->>>>>>> 949b17b (premier envoie)
     <div class="row">
       <label id="genLabel">Génération 0</label>
       <input type="range" id="genSlider" min="1" max="1" value="1" step="1">
     </div>
-<<<<<<< HEAD
-    <button class="primary" id="playGenBtn" style="width:100%;">Rejouer cette génération</button>
-  </div>
-
-  <p class="note">Les 5 comportements progressent automatiquement à chaque cycle GitHub Actions, sans qu'aucun ne soit "choisi" — le menu du haut ne fait que changer ce que tu regardes. Le panneau ci-dessous ajuste seulement l'objectif chiffré de la tâche affichée (distance, hauteur, partie interdite au sol).</p>
-=======
     <div class="controls">
       <button class="primary" id="playGenBtn" style="width:100%;">Rejouer cette génération</button>
       <button id="liveBtn" style="width:100%;">Revenir en direct</button>
     </div>
   </div>
 
-  <div class="panel">
-    <h2>Objectif</h2>
-    <div class="row">
-      <label>Partie interdite au sol</label>
-      <select id="ruleP"><option value="torso">Torse</option><option value="head">Tête</option></select>
-    </div>
-    <div class="row">
-      <label>Distance à parcourir</label>
-      <input type="range" id="ruleD" min="4" max="25" step="1" value="10">
-      <span id="ruleDOut" style="width:44px; text-align:right; color:var(--muted);">10 m</span>
-    </div>
-    <button class="primary" id="saveRuleBtn" style="width:100%;">Enregistrer sur GitHub</button>
-    <div id="ruleStatus" style="font-size:12px; color:var(--muted); margin-top:8px;"></div>
-    <details style="margin-top:12px;">
-      <summary>Connexion GitHub (à faire une seule fois, dans ce navigateur)</summary>
-      <div class="row" style="margin-top:10px;"><label>Dépôt</label><input type="text" id="ghRepo" placeholder="tonpseudo/nom-du-depot"></div>
-      <div class="row"><label>Token</label><input type="password" id="ghToken" placeholder="github_pat_..."></div>
-      <button id="saveConnBtn" style="width:100%;">Mémoriser</button>
-    </details>
-  </div>
-
   <p class="note">Le point vert flottant est l'objectif (point B). Si le torse ET la tête touchent le sol en même temps, le bonhomme réapparaît automatiquement au départ.</p>
->>>>>>> 949b17b (premier envoie)
 </div>
 
 <script>
@@ -347,38 +104,14 @@ var W = stage.clientWidth, H = stage.clientHeight;
 
 var scene = new THREE.Scene();
 scene.background = new THREE.Color(0xcac2b3);
-<<<<<<< HEAD
-scene.fog = new THREE.Fog(0xcac2b3, 30, 90);
-var camera = new THREE.PerspectiveCamera(45, W/H, 0.1, 300);
-=======
 scene.fog = new THREE.Fog(0xcac2b3, 14, 46);
 var camera = new THREE.PerspectiveCamera(45, W/H, 0.1, 200);
->>>>>>> 949b17b (premier envoie)
 var renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(W,H);
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 stage.appendChild(renderer.domElement);
 scene.add(new THREE.AmbientLight(0xffffff, 0.9));
 var dl = new THREE.DirectionalLight(0xfff6e8, 0.55);
-<<<<<<< HEAD
-dl.position.set(8,20,10);
-scene.add(dl);
-
-var IN=12, HID=10, OUT=13;
-function forward(genome, inputs){
-  var hid=[];
-  for(var h=0;h<HID;h++){
-    var s=genome[IN*HID+h];
-    for(var i=0;i<IN;i++) s += inputs[i]*genome[i*HID+h];
-    hid.push(Math.tanh(s));
-  }
-  var base = IN*HID+HID, out=[];
-  for(var o=0;o<OUT;o++){
-    var s=genome[base+HID*OUT+o];
-    for(var h=0;h<HID;h++) s += hid[h]*genome[base+h*OUT+o];
-    out.push(Math.tanh(s));
-  }
-=======
 dl.position.set(8,16,10);
 scene.add(dl);
 
@@ -403,7 +136,6 @@ function forward(genome, inputs){
   for(var h=0;h<HID;h++){ var s=genome[IN*HID+h]; for(var i=0;i<IN;i++) s+=inputs[i]*genome[i*HID+h]; hid.push(Math.tanh(s)); }
   var base=IN*HID+HID, out=[];
   for(var o=0;o<OUT;o++){ var s=genome[base+HID*OUT+o]; for(var h=0;h<HID;h++) s+=hid[h]*genome[base+h*OUT+o]; out.push(Math.tanh(s)); }
->>>>>>> 949b17b (premier envoie)
   return out;
 }
 function zAngle(q){ return Math.atan2(2*(q.w*q.z+q.x*q.y), 1-2*(q.y*q.y+q.z*q.z)); }
@@ -412,46 +144,19 @@ var world = new CANNON.World();
 world.gravity.set(0,-9.82,0);
 world.broadphase = new CANNON.NaiveBroadphase();
 world.solver.iterations = 14;
-<<<<<<< HEAD
-
-var ground = new CANNON.Body({ mass: 0, shape: new CANNON.Box(new CANNON.Vec3(1000, 0.5, 300)) });
-ground.position.set(0, -0.5, 0);
-world.addBody(ground);
-=======
 var groundBody = new CANNON.Body({mass:0, shape:new CANNON.Box(new CANNON.Vec3(300,0.5,20))});
 groundBody.position.set(0,-0.5,0);
 world.addBody(groundBody);
->>>>>>> 949b17b (premier envoie)
 
 var bodyMat = new THREE.MeshStandardMaterial({color:0x6f63c9});
 var pelvisMat = new THREE.MeshStandardMaterial({color:0x5b52a3});
 var headMat = new THREE.MeshStandardMaterial({color:0x9d92ea});
-<<<<<<< HEAD
-=======
 var dimMat = new THREE.MeshStandardMaterial({color:0x6f63c9, transparent:true, opacity:0.32});
->>>>>>> 949b17b (premier envoie)
 var eyeMat = new THREE.MeshStandardMaterial({color:0x1a1626});
 
 var FOOT_H={hx:0.12,hy:0.045,hz:0.07}, SHIN_H={hx:0.065,hy:0.19,hz:0.065}, THIGH_H={hx:0.08,hy:0.19,hz:0.08};
 var PELVIS_H={hx:0.13,hy:0.08,hz:0.15}, ABDOMEN_H={hx:0.11,hy:0.07,hz:0.13}, CHEST_H={hx:0.16,hy:0.13,hz:0.16};
 var HEAD_H={hx:0.14,hy:0.14,hz:0.14}, UPARM_H={hx:0.055,hy:0.15,hz:0.055}, FOREARM_H={hx:0.05,hy:0.13,hz:0.05};
-<<<<<<< HEAD
-var CHEST_REST_Y = 1.28;
-var Y = {foot:0.045, shin:0.28, thigh:0.66, pelvis:0.93, abdomen:1.08, chest:CHEST_REST_Y, head:1.55, upperArm:1.22, forearm:0.94, shoulder:1.37};
-
-function makeBody(hx,hy,hz,mass,pos,filter){
-  var body = new CANNON.Body({mass:mass, shape:new CANNON.Box(new CANNON.Vec3(hx,hy,hz))});
-  body.position.set(pos.x,pos.y,pos.z);
-  Object.assign(body, filter);
-  world.addBody(body);
-  return body;
-}
-function makeMesh(hx,hy,hz,mat){
-  var mesh = new THREE.Mesh(new THREE.BoxGeometry(hx*2,hy*2,hz*2), mat);
-  scene.add(mesh);
-  return mesh;
-}
-=======
 var Y = {foot:0.045, shin:0.28, thigh:0.66, pelvis:0.93, abdomen:1.08, chest:1.28, head:1.55, upperArm:1.22, forearm:0.94, shoulder:1.37};
 
 function makeBody(hx,hy,hz,mass,pos,filter){
@@ -459,61 +164,10 @@ function makeBody(hx,hy,hz,mass,pos,filter){
   body.position.set(pos.x,pos.y,pos.z); Object.assign(body, filter); world.addBody(body); return body;
 }
 function makeMesh(hx,hy,hz,mat){ var m=new THREE.Mesh(new THREE.BoxGeometry(hx*2,hy*2,hz*2), mat); scene.add(m); return m; }
->>>>>>> 949b17b (premier envoie)
 function hinge(bodyA,pivotA,bodyB,pivotB,maxForce){
   var h = new CANNON.HingeConstraint(bodyA, bodyB, {
     pivotA:new CANNON.Vec3(pivotA.x,pivotA.y,pivotA.z), axisA:new CANNON.Vec3(0,0,1),
     pivotB:new CANNON.Vec3(pivotB.x,pivotB.y,pivotB.z), axisB:new CANNON.Vec3(0,0,1), maxForce:maxForce});
-<<<<<<< HEAD
-  h.enableMotor();
-  world.addConstraint(h);
-  return h;
-}
-
-function makeFloorTexture(totalW, totalD, cellLen, cellDep, cols, rows){
-  var scalePx = 44;
-  var w = Math.max(64, Math.round(totalW*scalePx));
-  var h = Math.max(64, Math.round(totalD*scalePx));
-  var canvas = document.createElement('canvas');
-  canvas.width = w; canvas.height = h;
-  var ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#cec7b8';
-  ctx.fillRect(0,0,w,h);
-  ctx.strokeStyle = 'rgba(120,111,93,0.32)';
-  ctx.lineWidth = 1;
-  var fine = 0.3*scalePx;
-  for(var x=0;x<=w;x+=fine){ ctx.beginPath(); ctx.moveTo(x+0.5,0); ctx.lineTo(x+0.5,h); ctx.stroke(); }
-  for(var y=0;y<=h;y+=fine){ ctx.beginPath(); ctx.moveTo(0,y+0.5); ctx.lineTo(w,y+0.5); ctx.stroke(); }
-  ctx.strokeStyle = '#726b5c';
-  ctx.lineWidth = Math.max(3, scalePx*0.07);
-  for(var cx=0; cx<=cols; cx++){ var px=cx*cellLen*scalePx; ctx.beginPath(); ctx.moveTo(px,0); ctx.lineTo(px,h); ctx.stroke(); }
-  for(var cz=0; cz<=rows; cz++){ var py=cz*cellDep*scalePx; ctx.beginPath(); ctx.moveTo(0,py); ctx.lineTo(w,py); ctx.stroke(); }
-  var tex = new THREE.CanvasTexture(canvas);
-  tex.anisotropy = 4;
-  return tex;
-}
-
-var floorMesh = null;
-function buildFloor(cols, rows, cellLen, cellDep){
-  if(floorMesh){ scene.remove(floorMesh); floorMesh.geometry.dispose(); floorMesh.material.map.dispose(); floorMesh.material.dispose(); floorMesh = null; }
-  var totalW = cols*cellLen, totalD = rows*cellDep;
-  var tex = makeFloorTexture(totalW, totalD, cellLen, cellDep, cols, rows);
-  var geo = new THREE.PlaneGeometry(totalW, totalD);
-  var mat = new THREE.MeshStandardMaterial({map:tex, roughness:0.95});
-  floorMesh = new THREE.Mesh(geo, mat);
-  floorMesh.rotation.x = -Math.PI/2;
-  floorMesh.position.set(totalW/2, -0.01, totalD/2 - cellDep/2);
-  scene.add(floorMesh);
-}
-
-function createCreature(idx, genome, originX, z, rule, spotlight){
-  var groupBit = 1 << (idx+2);
-  var filter = {collisionFilterGroup:groupBit, collisionFilterMask:1};
-  var sx = originX + 0.5;
-  var task = rule.task || 'marche';
-  var goalDistance = rule.goalDistance || 10;
-
-=======
   h.enableMotor(); world.addConstraint(h); return h;
 }
 
@@ -521,7 +175,6 @@ function createCreature(idx, genome, z){
   var groupBit = 1 << (idx+2);
   var filter = {collisionFilterGroup:groupBit, collisionFilterMask:1};
   var sx = 0.5;
->>>>>>> 949b17b (premier envoie)
   var pelvis = makeBody(PELVIS_H.hx,PELVIS_H.hy,PELVIS_H.hz, 0.6, {x:sx,y:Y.pelvis,z:z}, filter);
   var abdomen = makeBody(ABDOMEN_H.hx,ABDOMEN_H.hy,ABDOMEN_H.hz, 0.3, {x:sx,y:Y.abdomen,z:z}, filter);
   var chest = makeBody(CHEST_H.hx,CHEST_H.hy,CHEST_H.hz, 0.9, {x:sx,y:Y.chest,z:z}, filter);
@@ -546,12 +199,7 @@ function createCreature(idx, genome, z){
     var shoulder = hinge(chest, {x:0,y:Y.shoulder-Y.chest,z:zo}, upperArm, {x:0,y:UPARM_H.hy,z:0}, 25);
     var elbow = hinge(upperArm, {x:0,y:-UPARM_H.hy,z:0}, forearm, {x:0,y:FOREARM_H.hy,z:0}, 15);
     arms.push({upperArm:upperArm, forearm:forearm, shoulder:shoulder, elbow:elbow,
-<<<<<<< HEAD
-      upperArmMesh:makeMesh(UPARM_H.hx,UPARM_H.hy,UPARM_H.hz,bodyMat.clone()),
-      forearmMesh:makeMesh(FOREARM_H.hx,FOREARM_H.hy,FOREARM_H.hz,bodyMat.clone())});
-=======
       upperArmMesh:makeMesh(UPARM_H.hx,UPARM_H.hy,UPARM_H.hz,bodyMat.clone()), forearmMesh:makeMesh(FOREARM_H.hx,FOREARM_H.hy,FOREARM_H.hz,bodyMat.clone())});
->>>>>>> 949b17b (premier envoie)
   });
 
   var legs = [];
@@ -563,51 +211,24 @@ function createCreature(idx, genome, z){
     var knee = hinge(thigh, {x:0,y:-THIGH_H.hy,z:0}, shin, {x:0,y:SHIN_H.hy,z:0}, 70);
     var ankle = hinge(shin, {x:0,y:-SHIN_H.hy,z:0}, foot, {x:-0.03,y:0,z:0}, 30);
     legs.push({thigh:thigh, shin:shin, foot:foot, hip:hip, knee:knee, ankle:ankle, contact:false,
-<<<<<<< HEAD
-      thighMesh:makeMesh(THIGH_H.hx,THIGH_H.hy,THIGH_H.hz,bodyMat.clone()),
-      shinMesh:makeMesh(SHIN_H.hx,SHIN_H.hy,SHIN_H.hz,bodyMat.clone()),
-      footMesh:makeMesh(FOOT_H.hx,FOOT_H.hy,FOOT_H.hz,pelvisMat.clone())});
-  });
-
-  var isVertical = (task==='saut' || task==='accroupi');
-  var goalY = task==='saut' ? CHEST_REST_Y + goalDistance/100 : (task==='accroupi' ? goalDistance/100 : 1.2);
-  var goalX = isVertical ? sx : originX+goalDistance;
-  var goalMesh = new THREE.Mesh(new THREE.SphereGeometry(0.13,16,16),
-    new THREE.MeshStandardMaterial({color: spotlight?0xd9b34a:0x6fbf73, emissive: spotlight?0x443311:0x225522}));
-  goalMesh.position.set(goalX, goalY, z);
-=======
       thighMesh:makeMesh(THIGH_H.hx,THIGH_H.hy,THIGH_H.hz,bodyMat.clone()), shinMesh:makeMesh(SHIN_H.hx,SHIN_H.hy,SHIN_H.hz,bodyMat.clone()), footMesh:makeMesh(FOOT_H.hx,FOOT_H.hy,FOOT_H.hz,pelvisMat.clone())});
   });
 
   var goalMesh = new THREE.Mesh(new THREE.SphereGeometry(0.15,16,16), new THREE.MeshStandardMaterial({color:0x6fbf73, emissive:0x225522}));
->>>>>>> 949b17b (premier envoie)
   scene.add(goalMesh);
 
   var spawn = {
     pelvis:{x:sx,y:Y.pelvis,z:z}, abdomen:{x:sx,y:Y.abdomen,z:z}, chest:{x:sx,y:Y.chest,z:z}, head:{x:sx,y:Y.head,z:z},
-<<<<<<< HEAD
-    upperArm:[{x:sx,y:Y.upperArm,z:z-0.22},{x:sx,y:Y.upperArm,z:z+0.22}],
-    forearm:[{x:sx,y:Y.forearm,z:z-0.22},{x:sx,y:Y.forearm,z:z+0.22}],
-    thigh:[{x:sx,y:Y.thigh,z:z-0.15},{x:sx,y:Y.thigh,z:z+0.15}],
-    shin:[{x:sx,y:Y.shin,z:z-0.15},{x:sx,y:Y.shin,z:z+0.15}],
-=======
     upperArm:[{x:sx,y:Y.upperArm,z:z-0.22},{x:sx,y:Y.upperArm,z:z+0.22}], forearm:[{x:sx,y:Y.forearm,z:z-0.22},{x:sx,y:Y.forearm,z:z+0.22}],
     thigh:[{x:sx,y:Y.thigh,z:z-0.15},{x:sx,y:Y.thigh,z:z+0.15}], shin:[{x:sx,y:Y.shin,z:z-0.15},{x:sx,y:Y.shin,z:z+0.15}],
->>>>>>> 949b17b (premier envoie)
     foot:[{x:sx+0.03,y:Y.foot,z:z-0.15},{x:sx+0.03,y:Y.foot,z:z+0.15}]
   };
 
   return {
     idx:idx, pelvis:pelvis, abdomen:abdomen, chest:chest, head:head, arms:arms, legs:legs,
-<<<<<<< HEAD
-    waist:waist, spine:spine, neck:neck, genome:genome, rule:rule, goalDistance:goalDistance,
-    pelvisMesh:pelvisMesh, abdomenMesh:abdomenMesh, chestMesh:chestMesh, headMesh:headMesh, eyeL:eyeL, eyeR:eyeR,
-    goalMesh:goalMesh, spawn:spawn, collapseTimer:0, spotlight:!!spotlight
-=======
     waist:waist, spine:spine, neck:neck, genome:genome,
     pelvisMesh:pelvisMesh, abdomenMesh:abdomenMesh, chestMesh:chestMesh, headMesh:headMesh, eyeL:eyeL, eyeR:eyeR,
     goalMesh:goalMesh, spawn:spawn, best:sx, collapseTimer:0
->>>>>>> 949b17b (premier envoie)
   };
 }
 
@@ -616,21 +237,12 @@ function resetCreature(c){
   put(c.pelvis, c.spawn.pelvis); put(c.abdomen, c.spawn.abdomen); put(c.chest, c.spawn.chest); put(c.head, c.spawn.head);
   c.arms.forEach(function(a,i){ put(a.upperArm, c.spawn.upperArm[i]); put(a.forearm, c.spawn.forearm[i]); });
   c.legs.forEach(function(l,i){ put(l.thigh, c.spawn.thigh[i]); put(l.shin, c.spawn.shin[i]); put(l.foot, c.spawn.foot[i]); });
-<<<<<<< HEAD
-  c.collapseTimer = 0;
-}
-
-function stepCreature(c){
-  var gd = c.goalDistance || 10;
-  var distLeft = Math.max(0, Math.min(1, (gd - c.chest.position.x)/gd));
-=======
   c.collapseTimer = 0; c.best = c.spawn.pelvis.x;
 }
 
 var goalDistance = 10;
 function stepCreature(c){
   var distLeft = Math.max(0, Math.min(1, (goalDistance - c.chest.position.x)/goalDistance));
->>>>>>> 949b17b (premier envoie)
   var inputs = [
     zAngle(c.chest.quaternion), c.chest.angularVelocity.z/4,
     zAngle(c.pelvis.quaternion), zAngle(c.abdomen.quaternion), zAngle(c.head.quaternion),
@@ -640,33 +252,6 @@ function stepCreature(c){
     distLeft
   ];
   var out = forward(c.genome, inputs);
-<<<<<<< HEAD
-  c.waist.setMotorSpeed(out[0]*4);
-  c.spine.setMotorSpeed(out[1]*4);
-  c.neck.setMotorSpeed(out[2]*3);
-  c.arms[0].shoulder.setMotorSpeed(out[3]*4);
-  c.arms[1].shoulder.setMotorSpeed(out[4]*4);
-  c.arms[0].elbow.setMotorSpeed(out[5]*4);
-  c.arms[1].elbow.setMotorSpeed(out[6]*4);
-  c.legs[0].hip.setMotorSpeed(out[7]*5);
-  c.legs[1].hip.setMotorSpeed(out[8]*5);
-  c.legs[0].knee.setMotorSpeed(out[9]*5);
-  c.legs[1].knee.setMotorSpeed(out[10]*5);
-  c.legs[0].ankle.setMotorSpeed(out[11]*4);
-  c.legs[1].ankle.setMotorSpeed(out[12]*4);
-  c.legs.forEach(function(l){ l.contact = l.foot.position.y < 0.1; });
-
-  var fullyDown = c.chest.position.y < 0.32 && c.head.position.y < 0.35;
-  if(fullyDown){ c.collapseTimer++; if(c.collapseTimer > 60) resetCreature(c); }
-  else { c.collapseTimer = 0; }
-}
-
-function syncCreature(c){
-  c.pelvisMesh.position.copy(c.pelvis.position); c.pelvisMesh.quaternion.copy(c.pelvis.quaternion);
-  c.abdomenMesh.position.copy(c.abdomen.position); c.abdomenMesh.quaternion.copy(c.abdomen.quaternion);
-  c.chestMesh.position.copy(c.chest.position); c.chestMesh.quaternion.copy(c.chest.quaternion);
-  c.headMesh.position.copy(c.head.position); c.headMesh.quaternion.copy(c.head.quaternion);
-=======
   c.waist.setMotorSpeed(out[0]*4); c.spine.setMotorSpeed(out[1]*4); c.neck.setMotorSpeed(out[2]*3);
   c.arms[0].shoulder.setMotorSpeed(out[3]*4); c.arms[1].shoulder.setMotorSpeed(out[4]*4);
   c.arms[0].elbow.setMotorSpeed(out[5]*4); c.arms[1].elbow.setMotorSpeed(out[6]*4);
@@ -686,72 +271,10 @@ function syncCreature(c, isLead){
   c.chestMesh.position.copy(c.chest.position); c.chestMesh.quaternion.copy(c.chest.quaternion); if(!isLead) c.chestMesh.material=dimMat;
   c.headMesh.position.copy(c.head.position); c.headMesh.quaternion.copy(c.head.quaternion); if(!isLead) c.headMesh.material=dimMat;
   c.eyeL.visible = c.eyeR.visible = isLead;
->>>>>>> 949b17b (premier envoie)
   var fwd = new THREE.Vector3(0.13,0.02,0).applyQuaternion(c.headMesh.quaternion);
   c.eyeL.position.copy(c.headMesh.position).add(fwd).add(new THREE.Vector3(0,0,-0.06).applyQuaternion(c.headMesh.quaternion));
   c.eyeR.position.copy(c.headMesh.position).add(fwd).add(new THREE.Vector3(0,0,0.06).applyQuaternion(c.headMesh.quaternion));
   c.arms.forEach(function(a){
-<<<<<<< HEAD
-    a.upperArmMesh.position.copy(a.upperArm.position); a.upperArmMesh.quaternion.copy(a.upperArm.quaternion);
-    a.forearmMesh.position.copy(a.forearm.position); a.forearmMesh.quaternion.copy(a.forearm.quaternion);
-  });
-  c.legs.forEach(function(l){
-    l.thighMesh.position.copy(l.thigh.position); l.thighMesh.quaternion.copy(l.thigh.quaternion);
-    l.shinMesh.position.copy(l.shin.position); l.shinMesh.quaternion.copy(l.shin.quaternion);
-    l.footMesh.position.copy(l.foot.position); l.footMesh.quaternion.copy(l.foot.quaternion);
-  });
-}
-
-function destroyCreature(c){
-  [c.pelvis,c.abdomen,c.chest,c.head].forEach(function(b){ world.removeBody(b); });
-  [c.pelvisMesh,c.abdomenMesh,c.chestMesh,c.headMesh,c.eyeL,c.eyeR].forEach(function(m){ scene.remove(m); });
-  c.arms.forEach(function(a){ world.removeBody(a.upperArm); world.removeBody(a.forearm); scene.remove(a.upperArmMesh); scene.remove(a.forearmMesh); });
-  c.legs.forEach(function(l){ world.removeBody(l.thigh); world.removeBody(l.shin); world.removeBody(l.foot); scene.remove(l.thighMesh); scene.remove(l.shinMesh); scene.remove(l.footMesh); });
-  scene.remove(c.goalMesh);
-}
-
-var creatures = [];
-var mode = 'grid';
-var camAngle = 0.02, camElev = 1.45, camDist = 10;
-var camTarget = new THREE.Vector3(0,1,0);
-
-function clearAll(){ creatures.forEach(destroyCreature); creatures = []; }
-
-function buildGrid(genomes, rule){
-  clearAll();
-  var cols = Math.max(1, Math.ceil(Math.sqrt(genomes.length)));
-  var isVertical = (rule.task==='saut' || rule.task==='accroupi');
-  var cellLen = isVertical ? 2.0 : (rule.goalDistance + 1.6);
-  var cellDep = 1.6;
-  genomes.forEach(function(g, i){
-    var col = i % cols, row = Math.floor(i/cols);
-    creatures.push(createCreature(i, g, col*cellLen, row*cellDep, rule, false));
-  });
-  var cRows = Math.ceil(genomes.length/cols);
-  buildFloor(cols, cRows, cellLen, cellDep);
-  camTarget.set((cols*cellLen)/2 - cellLen/2, 1, (cRows*cellDep)/2 - cellDep/2);
-  camDist = Math.max(6, Math.max(cols*cellLen, cRows*cellDep) * 0.95);
-}
-function buildSpotlight(genome, rule){
-  clearAll();
-  creatures.push(createCreature(0, genome, 0, 0, rule, true));
-  var isVertical = (rule.task==='saut' || rule.task==='accroupi');
-  var cellLen = isVertical ? 2.0 : ((rule.goalDistance||10) + 1.6);
-  buildFloor(1, 1, cellLen, 1.6);
-  camTarget.set(0.6, 1, 0);
-  camDist = Math.max(6, cellLen);
-}
-
-var keys = {};
-window.addEventListener('keydown', function(e){ keys[e.key.toLowerCase()] = true; });
-window.addEventListener('keyup', function(e){ keys[e.key.toLowerCase()] = false; });
-document.querySelectorAll('.padkeys button').forEach(function(btn){
-  var k = btn.dataset.k;
-  var map = {up:'w', down:'s', left:'a', right:'d'};
-  btn.addEventListener('pointerdown', function(){ keys[map[k]] = true; });
-  ['pointerup','pointerleave'].forEach(function(ev){ btn.addEventListener(ev, function(){ keys[map[k]] = false; }); });
-});
-=======
     a.upperArmMesh.position.copy(a.upperArm.position); a.upperArmMesh.quaternion.copy(a.upperArm.quaternion); if(!isLead) a.upperArmMesh.material=dimMat;
     a.forearmMesh.position.copy(a.forearm.position); a.forearmMesh.quaternion.copy(a.forearm.quaternion); if(!isLead) a.forearmMesh.material=dimMat;
   });
@@ -787,7 +310,6 @@ function leaderCreature(){
   creatures.forEach(function(c){ if(c.best>bx){ bx=c.best; best=c; } });
   return best || creatures[0];
 }
->>>>>>> 949b17b (premier envoie)
 
 var dragging=false, lastPX=0, lastPY=0;
 stage.addEventListener('pointerdown', function(e){ dragging=true; lastPX=e.clientX; lastPY=e.clientY; });
@@ -795,35 +317,6 @@ window.addEventListener('pointerup', function(){ dragging=false; });
 window.addEventListener('pointermove', function(e){
   if(!dragging) return;
   camAngle -= (e.clientX-lastPX)*0.006;
-<<<<<<< HEAD
-  camElev = Math.max(0.08, Math.min(1.55, camElev + (e.clientY-lastPY)*0.005));
-  lastPX=e.clientX; lastPY=e.clientY;
-});
-stage.addEventListener('wheel', function(e){ camDist = Math.max(2.5, Math.min(60, camDist + e.deltaY*0.01)); e.preventDefault(); }, {passive:false});
-
-function panCamera(){
-  var speed = 0.09;
-  var fwd = new THREE.Vector3(Math.sin(camAngle),0,Math.cos(camAngle));
-  var right = new THREE.Vector3(fwd.z,0,-fwd.x);
-  if(keys['w']||keys['arrowup']) camTarget.addScaledVector(fwd, -speed);
-  if(keys['s']||keys['arrowdown']) camTarget.addScaledVector(fwd, speed);
-  if(keys['a']||keys['arrowleft']) camTarget.addScaledVector(right, -speed);
-  if(keys['d']||keys['arrowright']) camTarget.addScaledVector(right, speed);
-}
-
-function animate(){
-  requestAnimationFrame(animate);
-  panCamera();
-  creatures.forEach(stepCreature);
-  world.step(1/60);
-  creatures.forEach(syncCreature);
-  camera.position.set(
-    camTarget.x + camDist*Math.cos(camElev)*Math.sin(camAngle),
-    camTarget.y + camDist*Math.sin(camElev),
-    camTarget.z + camDist*Math.cos(camElev)*Math.cos(camAngle)
-  );
-  camera.lookAt(camTarget);
-=======
   camElev = Math.max(0.08, Math.min(1.2, camElev + (e.clientY-lastPY)*0.005));
   lastPX=e.clientX; lastPY=e.clientY;
 });
@@ -845,38 +338,12 @@ function animate(){
     );
     camera.lookAt(camTarget);
   }
->>>>>>> 949b17b (premier envoie)
   renderer.render(scene, camera);
 }
 animate();
 
 window.addEventListener('resize', function(){
   var w = stage.clientWidth, h = stage.clientHeight;
-<<<<<<< HEAD
-  camera.aspect = w/h; camera.updateProjectionMatrix();
-  renderer.setSize(w,h);
-});
-
-var TASK_INFO = {
-  marche:   { label:'Marcher',      unit:'m',  min:4,  max:25, def:10, distLabel:'Distance à parcourir', forbiddenDefault:'torso',
-              milestones:[{key:'mouv',label:'Premier mouvement'},{key:'debout',label:'Il tient debout'},{key:'pas',label:'Premiers pas'},{key:'arrivee',label:'Arrivée au point B'}] },
-  course:   { label:'Courir',       unit:'m',  min:4,  max:25, def:10, distLabel:'Distance à parcourir', forbiddenDefault:'torso',
-              milestones:[{key:'mouv',label:'Premier mouvement'},{key:'vol',label:'Première foulée aérienne'},{key:'pas',label:'Ça court'},{key:'arrivee',label:'Arrivée au point B'}] },
-  rampe:    { label:'Ramper',       unit:'m',  min:4,  max:25, def:8,  distLabel:'Distance à parcourir', forbiddenDefault:'head',
-              milestones:[{key:'mouv',label:'Premier mouvement'},{key:'pas',label:'Reptation efficace'},{key:'arrivee',label:'Arrivée au point B'}] },
-  saut:     { label:'Sauter',       unit:'cm', min:10, max:60, def:30, distLabel:'Hauteur de saut visée', forbiddenDefault:'torso',
-              milestones:[{key:'mouv',label:'Premier décollage'},{key:'demi',label:'Bonne impulsion'},{key:'obj',label:'Hauteur visée atteinte'}] },
-  accroupi: { label:"S'accroupir",  unit:'cm', min:20, max:70, def:40, distLabel:'Hauteur accroupie visée', forbiddenDefault:'torso',
-              milestones:[{key:'mouv',label:'Premier fléchissement'},{key:'tenue',label:'Tient la position'},{key:'obj',label:'Position stable et complète'}] }
-};
-
-var state = null;
-var currentHist = [];
-
-var LS_REPO = 'evo_gh_repo', LS_TOKEN = 'evo_gh_token';
-document.getElementById('ghRepo').value = localStorage.getItem(LS_REPO) || '';
-document.getElementById('ghToken').value = localStorage.getItem(LS_TOKEN) || '';
-=======
   camera.aspect = w/h; camera.updateProjectionMatrix(); renderer.setSize(w,h);
 });
 
@@ -884,148 +351,7 @@ var MS_LABELS = {rampe:'Il rampe', debout:'Il tient debout', pas:'Premiers pas',
 var MS_ORDER = ['rampe','debout','pas','arrivee'];
 var state = null, currentHist = [];
 
-var LS_REPO='evo_gh_repo', LS_TOKEN='evo_gh_token';
-document.getElementById('ghRepo').value = localStorage.getItem(LS_REPO)||'';
-document.getElementById('ghToken').value = localStorage.getItem(LS_TOKEN)||'';
->>>>>>> 949b17b (premier envoie)
-document.getElementById('saveConnBtn').addEventListener('click', function(){
-  localStorage.setItem(LS_REPO, document.getElementById('ghRepo').value.trim());
-  localStorage.setItem(LS_TOKEN, document.getElementById('ghToken').value.trim());
-  document.getElementById('ruleStatus').textContent = 'Connexion mémorisée dans ce navigateur.';
-});
-<<<<<<< HEAD
-function updateFill(el){
-  var pct = ((el.value - el.min) / (el.max - el.min)) * 100;
-  el.style.setProperty('--fill', pct + '%');
-}
-document.getElementById('ruleD').addEventListener('input', function(){
-  var info = TASK_INFO[document.getElementById('taskSel').value];
-  document.getElementById('ruleDOut').textContent = this.value + ' ' + info.unit;
-  updateFill(this);
-});
-document.getElementById('genSlider').addEventListener('input', function(){ updateFill(this); });
-
-function renderMilestones(task, ts){
-  var info = TASK_INFO[task];
-  var list = document.getElementById('msList');
-  list.innerHTML = '';
-  info.milestones.forEach(function(def){
-    var m = ts && ts.milestones && ts.milestones[def.key];
-    var div = document.createElement('div');
-    div.className = 'ms' + (m ? '' : ' locked');
-    div.innerHTML = '<span>'+def.label+'</span><span class="meta">' + (m ? ('gén. '+m.generation) : 'pas encore') + '</span>';
-    if(m){
-      div.style.cursor='pointer';
-      div.addEventListener('click', function(){ mode='spotlight'; buildSpotlight(m.genome, ts.lastRule ? Object.assign({task:task}, ts.lastRule) : {task:task, forbiddenPart:'torso', goalDistance:info.def}); });
-    }
-    list.appendChild(div);
-  });
-}
-
-function loadTaskView(task){
-  var ts = state.tasks && state.tasks[task];
-  var info = TASK_INFO[task];
-  document.getElementById('genOut').textContent = ts ? ts.generation : 0;
-  document.getElementById('bestOut').textContent = ts ? Math.round(ts.bestPct) + ' %' : '—';
-  renderMilestones(task, ts);
-
-  currentHist = (ts && ts.history) || [];
-  var slider = document.getElementById('genSlider');
-  slider.max = Math.max(1, currentHist.length);
-  slider.value = currentHist.length || 1;
-  updateFill(slider);
-  document.getElementById('genLabel').textContent = 'Génération ' + (currentHist.length ? currentHist[currentHist.length-1].gen : 0);
-
-  var lastRule = (ts && ts.lastRule) || { forbiddenPart: info.forbiddenDefault, goalDistance: info.def };
-  document.getElementById('ruleP').value = lastRule.forbiddenPart;
-  document.getElementById('ruleDLabel').textContent = info.distLabel;
-  var slider2 = document.getElementById('ruleD');
-  slider2.min = info.min; slider2.max = info.max;
-  slider2.value = lastRule.goalDistance || info.def;
-  updateFill(slider2);
-  document.getElementById('ruleDOut').textContent = slider2.value + ' ' + info.unit;
-
-  if(mode==='grid'){
-    if(ts && ts.currentGenomes && ts.currentGenomes.length){
-      buildGrid(ts.currentGenomes, Object.assign({task:task}, lastRule));
-    } else {
-      clearAll();
-    }
-  }
-}
-
-document.getElementById('taskSel').addEventListener('change', function(){
-  mode = 'grid';
-  localStorage.setItem('evo_last_task', this.value);
-  loadTaskView(this.value);
-});
-document.getElementById('gridBtn').addEventListener('click', function(){
-  mode = 'grid';
-  loadTaskView(document.getElementById('taskSel').value);
-});
-document.getElementById('spotlightBtn').addEventListener('click', function(){
-  mode = 'spotlight';
-  var task = document.getElementById('taskSel').value;
-  if(currentHist.length){
-    var last = currentHist[currentHist.length-1];
-    buildSpotlight(last.genome, last.rule);
-  }
-});
-document.getElementById('playGenBtn').addEventListener('click', function(){
-  var slider = document.getElementById('genSlider');
-  var entry = currentHist[slider.value-1];
-  if(entry){ mode='spotlight'; buildSpotlight(entry.genome, entry.rule); }
-});
-document.getElementById('genSlider').addEventListener('input', function(){
-  var entry = currentHist[this.value-1];
-  document.getElementById('genLabel').textContent = 'Génération ' + (entry ? entry.gen : 0) + (entry ? (' · '+entry.pct+'%') : '');
-});
-
-document.getElementById('saveRuleBtn').addEventListener('click', async function(){
-  var repo = localStorage.getItem(LS_REPO);
-  var token = localStorage.getItem(LS_TOKEN);
-  var statusEl = document.getElementById('ruleStatus');
-  if(!repo || !token){ statusEl.textContent = "Remplis d'abord la connexion GitHub ci-dessous."; return; }
-  var task = document.getElementById('taskSel').value;
-  var patch = {
-    forbiddenPart: document.getElementById('ruleP').value,
-    goalDistance: parseInt(document.getElementById('ruleD').value, 10)
-  };
-  statusEl.textContent = 'Envoi en cours...';
-  try{
-    var getRes = await fetch('https://api.github.com/repos/'+repo+'/contents/rule.json', {
-      headers: { 'Authorization': 'token '+token, 'Accept': 'application/vnd.github+json' }
-    });
-    if(!getRes.ok) throw new Error('Lecture impossible (code '+getRes.status+')');
-    var current = await getRes.json();
-    var allRules = {};
-    try{ allRules = JSON.parse(decodeURIComponent(escape(atob(current.content.replace(/\n/g,''))))); }catch(e){ allRules = {}; }
-    allRules[task] = patch;
-    var content = btoa(unescape(encodeURIComponent(JSON.stringify(allRules, null, 2))));
-    var putRes = await fetch('https://api.github.com/repos/'+repo+'/contents/rule.json', {
-      method: 'PUT',
-      headers: { 'Authorization': 'token '+token, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: 'Objectif "'+task+'" mis à jour depuis le site', content: content, sha: current.sha, branch: 'main' })
-    });
-    if(!putRes.ok){
-      var err = await putRes.json().catch(function(){ return {}; });
-      throw new Error(err.message || ('Écriture impossible (code '+putRes.status+')'));
-    }
-    statusEl.textContent = "Enregistré. Les 5 comportements continuent à s'entraîner automatiquement à chaque cycle (~20 min) — celui-ci utilisera ce nouvel objectif dès le prochain passage.";
-  }catch(e){
-    statusEl.textContent = 'Erreur : ' + e.message;
-  }
-});
-
-fetch('./state.json?t=' + Date.now()).then(function(r){ return r.json(); }).then(function(s){
-  state = s;
-  if(!state.tasks) state.tasks = {};
-  document.getElementById('updOut').textContent = state.updatedAt ? new Date(state.updatedAt).toLocaleString('fr-FR') : 'pas encore lancé';
-  var lastViewed = localStorage.getItem('evo_last_task') || 'marche';
-  document.getElementById('taskSel').value = lastViewed;
-  loadTaskView(lastViewed);
-=======
-document.getElementById('ruleD').addEventListener('input', function(){ document.getElementById('ruleDOut').textContent = this.value+' m'; });
+document.getElementById('liveBtn').addEventListener('click', goLive);
 
 function renderMilestones(){
   var list = document.getElementById('msList');
@@ -1035,42 +361,23 @@ function renderMilestones(){
     var div = document.createElement('div');
     div.className = 'ms' + (m?'':' locked');
     div.innerHTML = '<span>'+MS_LABELS[key]+'</span><span class="meta">'+(m?('gén. '+m.generation):'pas encore')+'</span>';
-    if(m){ div.style.cursor='pointer'; div.addEventListener('click', function(){ mode='spotlight'; goalDistance=(state.lastRule&&state.lastRule.goalDistance)||10; buildSpotlight(m.genome); }); }
+    if(m){ div.style.cursor='pointer'; div.addEventListener('click', function(){ mode='spotlight'; buildSpotlight(m.genome); }); }
     list.appendChild(div);
   });
 }
 function goLive(){
-  mode='live'; goalDistance=(state.lastRule&&state.lastRule.goalDistance)||10;
+  mode='live';
   if(state.currentGenomes && state.currentGenomes.length) buildPopulation(state.currentGenomes);
 }
 document.getElementById('liveBtn').addEventListener('click', goLive);
 document.getElementById('playGenBtn').addEventListener('click', function(){
   var slider = document.getElementById('genSlider');
   var entry = currentHist[slider.value-1];
-  if(entry){ mode='spotlight'; goalDistance = entry.rule.goalDistance; buildSpotlight(entry.genome); }
+  if(entry){ mode='spotlight'; buildSpotlight(entry.genome); }
 });
 document.getElementById('genSlider').addEventListener('input', function(){
   var entry = currentHist[this.value-1];
   document.getElementById('genLabel').textContent = 'Génération '+(entry?entry.gen:0)+(entry?(' · '+entry.pct+'%'):'');
-});
-document.getElementById('saveRuleBtn').addEventListener('click', async function(){
-  var repo = localStorage.getItem(LS_REPO), token = localStorage.getItem(LS_TOKEN);
-  var statusEl = document.getElementById('ruleStatus');
-  if(!repo || !token){ statusEl.textContent = "Remplis d'abord la connexion GitHub ci-dessous."; return; }
-  var newRule = { forbiddenPart: document.getElementById('ruleP').value, goalDistance: parseInt(document.getElementById('ruleD').value,10) };
-  statusEl.textContent = 'Envoi en cours...';
-  try{
-    var getRes = await fetch('https://api.github.com/repos/'+repo+'/contents/rule.json', { headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json'} });
-    if(!getRes.ok) throw new Error('Lecture impossible (code '+getRes.status+')');
-    var current = await getRes.json();
-    var content = btoa(unescape(encodeURIComponent(JSON.stringify(newRule, null, 2))));
-    var putRes = await fetch('https://api.github.com/repos/'+repo+'/contents/rule.json', {
-      method:'PUT', headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
-      body: JSON.stringify({ message:'Nouvel objectif depuis le site', content:content, sha:current.sha, branch:'main' })
-    });
-    if(!putRes.ok){ var err = await putRes.json().catch(function(){return{};}); throw new Error(err.message || ('Écriture impossible (code '+putRes.status+')')); }
-    statusEl.textContent = "Enregistré ! Le prochain cycle automatique (~20 min) l'appliquera, ou lance-le toi-même dans l'onglet Actions.";
-  }catch(e){ statusEl.textContent = 'Erreur : '+e.message; }
 });
 
 fetch('./state.json?t='+Date.now()).then(function(r){ return r.json(); }).then(function(s){
@@ -1083,12 +390,7 @@ fetch('./state.json?t='+Date.now()).then(function(r){ return r.json(); }).then(f
   var slider = document.getElementById('genSlider');
   slider.max = Math.max(1, currentHist.length); slider.value = currentHist.length || 1;
   document.getElementById('genLabel').textContent = 'Génération '+(currentHist.length?currentHist[currentHist.length-1].gen:0);
-  var lastRule = state.lastRule || {forbiddenPart:'torso', goalDistance:10};
-  document.getElementById('ruleP').value = lastRule.forbiddenPart;
-  document.getElementById('ruleD').value = lastRule.goalDistance;
-  document.getElementById('ruleDOut').textContent = lastRule.goalDistance+' m';
   goLive();
->>>>>>> 949b17b (premier envoie)
 }).catch(function(){
   document.getElementById('genOut').textContent = '—';
   document.getElementById('updOut').textContent = "état introuvable — l'entraînement n'a pas encore tourné";

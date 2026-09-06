@@ -4,6 +4,6 @@
   "currentGenomes": null,
   "history": [],
   "milestones": {},
-  "lastRule": null,
+  "lastRule": { "forbiddenPart": "torso", "goalDistance": 10 },
   "updatedAt": null
 }
