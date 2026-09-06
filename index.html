@@ -117,13 +117,15 @@ scene.add(dl);
 
 function makeFloorTexture(){
   var scalePx=48;
-  var canvas=document.createElement('canvas'); canvas.width=canvas.height=scalePx;
+  var canvas=document.createElement('canvas'); canvas.width=canvas.height=scalePx*2;
   var ctx=canvas.getContext('2d');
-  ctx.fillStyle='#c2b8a2'; ctx.fillRect(0,0,scalePx,scalePx);
-  ctx.strokeStyle='rgba(120,111,93,0.32)'; ctx.lineWidth=1.5;
-  ctx.strokeRect(0.75,0.75,scalePx-1.5,scalePx-1.5);
+  var c1='#c7bfa9', c2='#b8ae95';
+  ctx.fillStyle=c1; ctx.fillRect(0,0,scalePx*2,scalePx*2);
+  ctx.fillStyle=c2; ctx.fillRect(0,0,scalePx,scalePx); ctx.fillRect(scalePx,scalePx,scalePx,scalePx);
+  ctx.strokeStyle='rgba(90,82,64,0.4)'; ctx.lineWidth=2;
+  ctx.strokeRect(1,1,scalePx*2-2,scalePx*2-2);
   var tex=new THREE.CanvasTexture(canvas); tex.wrapS=tex.wrapT=THREE.RepeatWrapping;
-  tex.repeat.set(240/0.3, 32/0.3);
+  tex.repeat.set(240/0.6, 32/0.6);
   return tex;
 }
 var floorMesh = new THREE.Mesh(new THREE.BoxGeometry(240,0.2,32), new THREE.MeshStandardMaterial({map:makeFloorTexture(), roughness:0.95}));
@@ -217,6 +219,18 @@ function createCreature(idx, genome, z){
   var goalMesh = new THREE.Mesh(new THREE.SphereGeometry(0.15,16,16), new THREE.MeshStandardMaterial({color:0x6fbf73, emissive:0x225522}));
   scene.add(goalMesh);
 
+  var shadowTex = (function(){
+    var cv=document.createElement('canvas'); cv.width=cv.height=64;
+    var cx=cv.getContext('2d');
+    var g=cx.createRadialGradient(32,32,4,32,32,30);
+    g.addColorStop(0,'rgba(20,15,10,0.45)'); g.addColorStop(1,'rgba(20,15,10,0)');
+    cx.fillStyle=g; cx.fillRect(0,0,64,64);
+    return new THREE.CanvasTexture(cv);
+  })();
+  var shadowMesh = new THREE.Mesh(new THREE.PlaneGeometry(0.7,0.7), new THREE.MeshBasicMaterial({map:shadowTex, transparent:true, depthWrite:false}));
+  shadowMesh.rotation.x = -Math.PI/2;
+  scene.add(shadowMesh);
+
   var spawn = {
     pelvis:{x:sx,y:Y.pelvis,z:z}, abdomen:{x:sx,y:Y.abdomen,z:z}, chest:{x:sx,y:Y.chest,z:z}, head:{x:sx,y:Y.head,z:z},
     upperArm:[{x:sx,y:Y.upperArm,z:z-0.22},{x:sx,y:Y.upperArm,z:z+0.22}], forearm:[{x:sx,y:Y.forearm,z:z-0.22},{x:sx,y:Y.forearm,z:z+0.22}],
@@ -228,7 +242,7 @@ function createCreature(idx, genome, z){
     idx:idx, pelvis:pelvis, abdomen:abdomen, chest:chest, head:head, arms:arms, legs:legs,
     waist:waist, spine:spine, neck:neck, genome:genome,
     pelvisMesh:pelvisMesh, abdomenMesh:abdomenMesh, chestMesh:chestMesh, headMesh:headMesh, eyeL:eyeL, eyeR:eyeR,
-    goalMesh:goalMesh, spawn:spawn, best:sx, collapseTimer:0
+    goalMesh:goalMesh, shadowMesh:shadowMesh, spawn:spawn, best:sx, collapseTimer:0
   };
 }
 
@@ -286,10 +300,12 @@ function syncCreature(c, isLead){
   });
   c.goalMesh.position.set(goalDistance, 1.2 + Math.sin(Date.now()*0.002)*0.08, c.pelvis.position.z);
   c.goalMesh.visible = isLead;
+  c.shadowMesh.position.set(c.pelvis.position.x, 0.008, c.pelvis.position.z);
+  c.shadowMesh.material.opacity = isLead ? 1 : 0.35;
 }
 function destroyCreature(c){
   [c.pelvis,c.abdomen,c.chest,c.head].forEach(function(b){ world.removeBody(b); });
-  [c.pelvisMesh,c.abdomenMesh,c.chestMesh,c.headMesh,c.eyeL,c.eyeR,c.goalMesh].forEach(function(m){ scene.remove(m); });
+  [c.pelvisMesh,c.abdomenMesh,c.chestMesh,c.headMesh,c.eyeL,c.eyeR,c.goalMesh,c.shadowMesh].forEach(function(m){ scene.remove(m); });
   c.arms.forEach(function(a){ world.removeBody(a.upperArm); world.removeBody(a.forearm); scene.remove(a.upperArmMesh); scene.remove(a.forearmMesh); });
   c.legs.forEach(function(l){ world.removeBody(l.thigh); world.removeBody(l.shin); world.removeBody(l.foot); scene.remove(l.thighMesh); scene.remove(l.shinMesh); scene.remove(l.footMesh); });
 }
