@@ -33,7 +33,7 @@
   .stat::before{content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--purple),transparent);}
   .stat .label{font-size:10.5px; color:var(--muted); text-transform:uppercase; letter-spacing:1px;}
   .stat .val{font-family:var(--font-display); font-size:20px; font-weight:600; margin-top:4px;}
-  .stage{position:relative; width:100%; height:400px; background:#cac2b3; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; cursor:grab; touch-action:none; box-shadow:0 8px 30px -12px rgba(0,0,0,.6);}
+  .stage{position:relative; width:100%; height:400px; background:#b9c6d6; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; cursor:grab; touch-action:none; box-shadow:0 8px 30px -12px rgba(0,0,0,.6);}
   .stage:active{cursor:grabbing;}
   .hint{position:absolute; bottom:10px; left:10px; font-size:10.5px; color:var(--muted); background:rgba(10,9,18,.7); padding:5px 10px; border-radius:20px; pointer-events:none;}
   .panel{background:linear-gradient(160deg,var(--panel2),var(--panel)); border:1px solid var(--line); border-radius:var(--radius); padding:18px; margin-top:16px;}
@@ -103,8 +103,8 @@ var stage = document.getElementById('stage');
 var W = stage.clientWidth, H = stage.clientHeight;
 
 var scene = new THREE.Scene();
-scene.background = new THREE.Color(0xcac2b3);
-scene.fog = new THREE.Fog(0xcac2b3, 14, 46);
+scene.background = new THREE.Color(0xb9c6d6);
+scene.fog = new THREE.Fog(0xb9c6d6, 16, 48);
 var camera = new THREE.PerspectiveCamera(45, W/H, 0.1, 200);
 var renderer = new THREE.WebGLRenderer({antialias:true});
 renderer.setSize(W,H);
@@ -119,7 +119,7 @@ function makeFloorTexture(){
   var scalePx=48;
   var canvas=document.createElement('canvas'); canvas.width=canvas.height=scalePx;
   var ctx=canvas.getContext('2d');
-  ctx.fillStyle='#cec7b8'; ctx.fillRect(0,0,scalePx,scalePx);
+  ctx.fillStyle='#c2b8a2'; ctx.fillRect(0,0,scalePx,scalePx);
   ctx.strokeStyle='rgba(120,111,93,0.32)'; ctx.lineWidth=1.5;
   ctx.strokeRect(0.75,0.75,scalePx-1.5,scalePx-1.5);
   var tex=new THREE.CanvasTexture(canvas); tex.wrapS=tex.wrapT=THREE.RepeatWrapping;
