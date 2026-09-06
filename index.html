@@ -163,7 +163,7 @@ function makeBody(hx,hy,hz,mass,pos,filter){
   var body = new CANNON.Body({mass:mass, shape:new CANNON.Box(new CANNON.Vec3(hx,hy,hz))});
   body.position.set(pos.x,pos.y,pos.z); Object.assign(body, filter); world.addBody(body); return body;
 }
-function makeMesh(hx,hy,hz,mat){ var m=new THREE.Mesh(new THREE.BoxGeometry(hx*2,hy*2,hz*2), mat); scene.add(m); return m; }
+function makeMesh(hx,hy,hz,mat){ var m=new THREE.Mesh(new THREE.BoxGeometry(hx*2,hy*2,hz*2), mat); m.userData.origMat = mat; scene.add(m); return m; }
 function hinge(bodyA,pivotA,bodyB,pivotB,maxForce){
   var h = new CANNON.HingeConstraint(bodyA, bodyB, {
     pivotA:new CANNON.Vec3(pivotA.x,pivotA.y,pivotA.z), axisA:new CANNON.Vec3(0,0,1),
@@ -265,23 +265,23 @@ function stepCreature(c){
   if(fullyDown){ c.collapseTimer++; if(c.collapseTimer > 60) resetCreature(c); } else { c.collapseTimer = 0; }
 }
 function syncCreature(c, isLead){
-  var mat = isLead ? null : dimMat;
-  c.pelvisMesh.position.copy(c.pelvis.position); c.pelvisMesh.quaternion.copy(c.pelvis.quaternion); if(!isLead) c.pelvisMesh.material=dimMat;
-  c.abdomenMesh.position.copy(c.abdomen.position); c.abdomenMesh.quaternion.copy(c.abdomen.quaternion); if(!isLead) c.abdomenMesh.material=dimMat;
-  c.chestMesh.position.copy(c.chest.position); c.chestMesh.quaternion.copy(c.chest.quaternion); if(!isLead) c.chestMesh.material=dimMat;
-  c.headMesh.position.copy(c.head.position); c.headMesh.quaternion.copy(c.head.quaternion); if(!isLead) c.headMesh.material=dimMat;
+  function applyMat(mesh){ mesh.material = isLead ? mesh.userData.origMat : dimMat; }
+  c.pelvisMesh.position.copy(c.pelvis.position); c.pelvisMesh.quaternion.copy(c.pelvis.quaternion); applyMat(c.pelvisMesh);
+  c.abdomenMesh.position.copy(c.abdomen.position); c.abdomenMesh.quaternion.copy(c.abdomen.quaternion); applyMat(c.abdomenMesh);
+  c.chestMesh.position.copy(c.chest.position); c.chestMesh.quaternion.copy(c.chest.quaternion); applyMat(c.chestMesh);
+  c.headMesh.position.copy(c.head.position); c.headMesh.quaternion.copy(c.head.quaternion); applyMat(c.headMesh);
   c.eyeL.visible = c.eyeR.visible = isLead;
   var fwd = new THREE.Vector3(0.13,0.02,0).applyQuaternion(c.headMesh.quaternion);
   c.eyeL.position.copy(c.headMesh.position).add(fwd).add(new THREE.Vector3(0,0,-0.06).applyQuaternion(c.headMesh.quaternion));
   c.eyeR.position.copy(c.headMesh.position).add(fwd).add(new THREE.Vector3(0,0,0.06).applyQuaternion(c.headMesh.quaternion));
   c.arms.forEach(function(a){
-    a.upperArmMesh.position.copy(a.upperArm.position); a.upperArmMesh.quaternion.copy(a.upperArm.quaternion); if(!isLead) a.upperArmMesh.material=dimMat;
-    a.forearmMesh.position.copy(a.forearm.position); a.forearmMesh.quaternion.copy(a.forearm.quaternion); if(!isLead) a.forearmMesh.material=dimMat;
+    a.upperArmMesh.position.copy(a.upperArm.position); a.upperArmMesh.quaternion.copy(a.upperArm.quaternion); applyMat(a.upperArmMesh);
+    a.forearmMesh.position.copy(a.forearm.position); a.forearmMesh.quaternion.copy(a.forearm.quaternion); applyMat(a.forearmMesh);
   });
   c.legs.forEach(function(l){
-    l.thighMesh.position.copy(l.thigh.position); l.thighMesh.quaternion.copy(l.thigh.quaternion); if(!isLead) l.thighMesh.material=dimMat;
-    l.shinMesh.position.copy(l.shin.position); l.shinMesh.quaternion.copy(l.shin.quaternion); if(!isLead) l.shinMesh.material=dimMat;
-    l.footMesh.position.copy(l.foot.position); l.footMesh.quaternion.copy(l.foot.quaternion); if(!isLead) l.footMesh.material=dimMat;
+    l.thighMesh.position.copy(l.thigh.position); l.thighMesh.quaternion.copy(l.thigh.quaternion); applyMat(l.thighMesh);
+    l.shinMesh.position.copy(l.shin.position); l.shinMesh.quaternion.copy(l.shin.quaternion); applyMat(l.shinMesh);
+    l.footMesh.position.copy(l.foot.position); l.footMesh.quaternion.copy(l.foot.quaternion); applyMat(l.footMesh);
   });
   c.goalMesh.position.set(goalDistance, 1.2 + Math.sin(Date.now()*0.002)*0.08, c.pelvis.position.z);
   c.goalMesh.visible = isLead;
