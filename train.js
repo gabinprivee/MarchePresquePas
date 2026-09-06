@@ -144,7 +144,7 @@ function simulateGeneration(genomes, rule) {
         zAngle(c.legs[1].thigh.quaternion), zAngle(c.legs[1].shin.quaternion),
         distLeft
       ];
-      var out = forward(c.genome, inputs);
+      var out = forward(c.genome, inputs).map(function (v) { return isFinite(v) ? v : 0; });
       c.waist.setMotorSpeed(out[0] * 4);
       c.spine.setMotorSpeed(out[1] * 4);
       c.neck.setMotorSpeed(out[2] * 3);
@@ -164,6 +164,7 @@ function simulateGeneration(genomes, rule) {
       if (forbidden.position.y < 0.3) c.alive = false;
       if (c.chest.position.y > 1.0) c.standTicks++;
       if (c.chest.position.x > c.best) c.best = c.chest.position.x;
+      if (!isFinite(c.chest.position.y) || !isFinite(c.chest.position.x) || c.chest.position.y < -3) c.alive = false;
     });
     world.step(1 / HZ);
   }
