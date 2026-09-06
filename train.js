@@ -127,6 +127,15 @@ function createCreature(world, genome, idx, startX, z) {
   };
 }
 
+function clampFloor(body, halfH) {
+  if (body.position.y < halfH) { body.position.y = halfH; if (body.velocity.y < 0) body.velocity.y = 0; }
+}
+function clampCreatureToFloor(c) {
+  clampFloor(c.pelvis, PELVIS_H.hy); clampFloor(c.abdomen, ABDOMEN_H.hy); clampFloor(c.chest, CHEST_H.hy); clampFloor(c.head, HEAD_H.hy);
+  c.arms.forEach(function (a) { clampFloor(a.upperArm, UPARM_H.hy); clampFloor(a.forearm, FOREARM_H.hy); });
+  c.legs.forEach(function (l) { clampFloor(l.thigh, THIGH_H.hy); clampFloor(l.shin, SHIN_H.hy); clampFloor(l.foot, FOOT_H.hy); });
+}
+
 function simulateGeneration(genomes, rule) {
   var world = buildWorld();
   var creatures = genomes.map(function (g, i) {
@@ -167,6 +176,7 @@ function simulateGeneration(genomes, rule) {
       if (!isFinite(c.chest.position.y) || !isFinite(c.chest.position.x) || c.chest.position.y < -3) c.alive = false;
     });
     world.step(1 / HZ);
+    creatures.forEach(clampCreatureToFloor);
   }
   return creatures.map(function (c) {
     return { genome: c.genome, best: c.best, standFrac: c.standTicks / GEN_STEPS };
