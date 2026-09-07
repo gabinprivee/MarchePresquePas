@@ -4,7 +4,7 @@ const CANNON = require('cannon');
 
 const STATE_PATH = path.join(__dirname, 'state.json');
 
-const POP = 4;
+const POP = 8;
 const IN = 12, HID = 10, OUT = 13;
 const GLEN = IN * HID + HID + HID * OUT + OUT;
 const HZ = 60;
@@ -239,7 +239,7 @@ for (var run = 0; run < GENERATIONS_PER_RUN; run++) {
   });
   if (state.history.length > HISTORY_LIMIT) state.history.shift();
 
-  var next = [top.genome, mutate(top.genome)];
+  var next = [top.genome, mutate(top.genome), randGenome(), randGenome()];
   var pool = results.slice(0, Math.max(2, Math.floor(POP / 2)));
   while (next.length < POP) {
     var a = pool[Math.floor(Math.random() * pool.length)].genome;
