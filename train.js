@@ -4,7 +4,7 @@ const CANNON = require('cannon');
 
 const STATE_PATH = path.join(__dirname, 'state.json');
 
-const POP = 12;
+const POP = 30;
 const IN = 12, HID = 10, OUT = 13;
 const GLEN = IN * HID + HID + HID * OUT + OUT;
 const HZ = 60;
@@ -135,7 +135,7 @@ function createCreature(world, genome, idx, startX, z) {
   return {
     pelvis: pelvis, abdomen: abdomen, chest: chest, head: head, arms: arms, legs: legs,
     waist: waist, spine: spine, neck: neck, genome: genome,
-    best: 0, alive: true, standTicks: 0
+    best: 0, alive: true, standTicks: 0, moveTicks: 0
   };
 }
 
@@ -184,6 +184,8 @@ function simulateGeneration(genomes, rule) {
       var forbidden = rule.forbiddenPart === 'head' ? c.head : c.chest;
       if (forbidden.position.y < 0.3) c.alive = false;
       if (c.chest.position.y > 1.0) c.standTicks++;
+      var vx = c.chest.velocity.x, vy = c.chest.velocity.y, vz = c.chest.velocity.z;
+      if (Math.sqrt(vx * vx + vy * vy + vz * vz) > 0.06) c.moveTicks++;
       if (c.chest.position.x > c.best) c.best = c.chest.position.x;
       if (!isFinite(c.chest.position.y) || !isFinite(c.chest.position.x) || c.chest.position.y < -3) c.alive = false;
     });
@@ -191,7 +193,10 @@ function simulateGeneration(genomes, rule) {
     creatures.forEach(clampCreatureToFloor);
   }
   return creatures.map(function (c) {
-    return { genome: c.genome, best: c.best, standFrac: c.standTicks / GEN_STEPS };
+    var standFrac = c.standTicks / GEN_STEPS, moveFrac = c.moveTicks / GEN_STEPS;
+    var pct = fitPct(c.best);
+    var shaped = pct + standFrac * 20 + moveFrac * 10;
+    return { genome: c.genome, best: c.best, standFrac: standFrac, moveFrac: moveFrac, fitness: shaped };
   });
 }
 
@@ -226,7 +231,7 @@ function recordMilestones(gen, metrics, genome) {
 for (var run = 0; run < GENERATIONS_PER_RUN; run++) {
   var results = simulateGeneration(genomes, rule);
   results.forEach(function (r) { r.pct = fitPct(r.best); });
-  results.sort(function (a, b) { return b.pct - a.pct; });
+  results.sort(function (a, b) { return b.fitness - a.fitness; });
 
   state.generation++;
   var top = results[0];
@@ -239,8 +244,10 @@ for (var run = 0; run < GENERATIONS_PER_RUN; run++) {
   });
   if (state.history.length > HISTORY_LIMIT) state.history.shift();
 
-  var next = [top.genome, mutate(top.genome), randGenome(), randGenome(), randGenome(), randGenome()];
-  var pool = results.slice(0, Math.max(2, Math.floor(POP / 2)));
+  var immigrantCount = Math.round(POP * 0.35);
+  var next = [top.genome, mutate(top.genome)];
+  for (var im = 0; im < immigrantCount; im++) next.push(randGenome());
+  var pool = results.slice(0, Math.max(3, Math.floor(POP / 3)));
   while (next.length < POP) {
     var a = pool[Math.floor(Math.random() * pool.length)].genome;
     var b = pool[Math.floor(Math.random() * pool.length)].genome;
